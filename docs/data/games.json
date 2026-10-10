@@ -1,0 +1,26 @@
+[
+  {
+    "id": "zelda-totk",
+    "title": "塞尔达传说 王国之泪",
+    "platform": "Switch",
+    "category": "探索 / 冒险",
+    "description": "流程、神庙与收集资料的预留板块。",
+    "status": "待编写"
+  },
+  {
+    "id": "mario-kart-world",
+    "title": "马力欧卡丁车 世界",
+    "platform": "Switch 2",
+    "category": "竞速",
+    "description": "赛道、技巧与解锁资料的预留板块。",
+    "status": "待编写"
+  },
+  {
+    "id": "xenoblade3",
+    "title": "异度神剑 3",
+    "platform": "Switch",
+    "category": "角色扮演",
+    "description": "职业、队伍与任务资料的预留板块。",
+    "status": "待编写"
+  }
+]
