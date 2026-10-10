@@ -42,4 +42,4 @@ try {
  assert.equal(await page.getByText('第五章：夜间怪物（暂译）',{exact:true}).count(),0)
  assert.deepEqual(errors,[])
  console.log('FWE browser checks passed: filters, growth controls, phase resources, progress isolation, mobile render, hydration.')
-} finally {await browser.close();server.kill()}
+} catch(error) { console.error(error); throw error } finally {await browser.close();server.kill()}
