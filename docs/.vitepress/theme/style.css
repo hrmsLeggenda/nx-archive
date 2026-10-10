@@ -27,3 +27,6 @@
 .vp-doc .scroll{max-width:100%;overflow-x:auto}
 @media(min-width:960px){.wiki-navigation{display:block}.wiki-navigation summary{list-style:none;pointer-events:none}}
 @media(max-width:640px){.archive-controls{display:grid;grid-template-columns:1fr}.archive-controls label{flex-wrap:wrap}.archive-controls input,.archive-controls select{max-width:100%}.page-directory li{flex-wrap:wrap}.page-directory li a{flex-basis:100%}}
+
+.entity-infobox{background:var(--vp-c-bg-soft);border:1px solid var(--vp-c-divider);border-radius:12px;padding:14px 20px;margin:20px 0}
+.entity-infobox p{margin:8px 0}

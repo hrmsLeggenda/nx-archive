@@ -19,7 +19,7 @@ try{
  await page.setViewportSize({width:390,height:844})
  await page.goto(base+'games/fire-emblem-fw/guides/classes.html')
  await page.locator('.wiki-navigation summary').click()
- assert.ok(await page.getByRole('link',{name:'全部页面',exact:true}).isVisible())
+ assert.ok(await page.getByRole('navigation',{name:'游戏 Wiki 导航',exact:true}).getByRole('link',{name:'全部页面',exact:true}).isVisible())
  await page.screenshot({path:'wiki-shell-mobile.png',fullPage:true})
  assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth+1))
  assert.deepEqual(errors,[])

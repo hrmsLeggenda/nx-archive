@@ -3,6 +3,8 @@ import { computed, ref } from 'vue'
 import { withBase } from 'vitepress'
 import db from '../../../games/fire-emblem-fw/data/generated/database.json'
 import { effectiveGrowth, expectation } from './fwe-growth.mjs'
+import graph from '../../../games/fire-emblem-fw/data/generated/entities.json'
+import {entityForName} from './entity-model.mjs'
 const tab=ref('characters'), query=ref(''), tier=ref(''), sort=ref('name')
 const unit=ref(db.characters[0].name), job=ref(db.classes[0].name), levels=ref(10)
 const labels={HP:'生命',Str:'力量',Mag:'魔力',Spd:'速度',Dex:'技巧',Def:'防御',Res:'魔防',Lck:'幸运',Cha:'魅力'}
@@ -19,7 +21,7 @@ const tiers=[...new Set(db.classes.map(r=>r.tier).filter(Boolean))]
 <p>已导入 {{db.characters.length}} 人物、{{db.classes.length}} 职业；补丁版本未确认。英文名称沿用来源，中文译名持续核对。</p>
 <div class="archive-controls"><label>资料类型 <select v-model="tab"><option value="characters">人物</option><option value="classes">职业</option><option value="spells">法术习得</option><option value="bloodmarks">血印与持有者</option><option value="arts">主角战技条件</option><option value="skillPreferences">技能擅长</option></select></label><label>搜索 <input type="search" v-model="query" placeholder="名称、阵营、技能" /></label><label v-if="tab==='classes'">职业层级 <select v-model="tier"><option value="">全部</option><option v-for="t in tiers" :key="t">{{t}}</option></select></label><label v-if="tab==='characters'||tab==='classes'">排序 <select v-model="sort"><option value="name">名称</option><option v-for="s in db.stats" :key="s" :value="s">{{labels[s]}}成长降序</option></select></label></div>
 <p role="status">匹配 {{records.length}} 项</p>
-<div class="scroll" tabindex="0" aria-label="可横向滚动数据表"><table v-if="tab==='characters'||tab==='classes'"><thead><tr><th>名称</th><th>{{tab==='characters'?'阵营':'层级'}}</th><th v-for="s in db.stats" :key="s">{{labels[s]}}%</th></tr></thead><tbody><tr v-for="r in records" :key="r.name"><td><a :href="r.source" target="_blank" rel="noopener noreferrer">{{r.nameZh || r.name}}</a></td><td>{{r.faction || r.tier || '未记录'}}</td><td v-for="s in db.stats" :key="s">{{r.growths[s] ?? '—'}}</td></tr></tbody></table>
+<div class="scroll" tabindex="0" aria-label="可横向滚动数据表"><table v-if="tab==='characters'||tab==='classes'"><thead><tr><th>名称</th><th>{{tab==='characters'?'阵营':'层级'}}</th><th v-for="s in db.stats" :key="s">{{labels[s]}}%</th></tr></thead><tbody><tr v-for="r in records" :key="r.name"><td><a :href="withBase(entityForName(graph,tab,r.name)?.url || '/games/fire-emblem-fw/database')">{{r.nameZh || r.name}}</a></td><td>{{r.faction || r.tier || '未记录'}}</td><td v-for="s in db.stats" :key="s">{{r.growths[s] ?? '—'}}</td></tr></tbody></table>
 <ul v-else><li v-for="(r,i) in records" :key="i">{{r.name}} · {{r.spell || r.mark || r.art || r.skill}} · {{r.skill_level || r.learned || r.kind || r.holders}}</li></ul></div>
 <details v-if="tab==='classes'"><summary>职业转职条件与特性名称</summary><article v-for="r in records" :key="r.name"><h3>{{r.name}}</h3><p>许可证：{{r.license || '未记录'}}；参考等级：{{r.ideal_lv || '未记录'}}；名望：{{r.renown_lv || '未记录'}}</p><p>主要技能：{{r.primary_skill || '未记录'}}；次要技能：{{r.secondary_skill || '未记录'}}；移动：{{r.movement || '未记录'}}；武器：{{r.weapons || '未记录'}}</p><p>职业能力：{{r.class_ability || '未记录'}}；精通能力：{{r.master_ability || '未记录'}}。效果请查看<a :href="r.source">来源</a>。</p></article></details>
 <h2>成长期望模拟器</h2>
