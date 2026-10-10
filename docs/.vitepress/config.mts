@@ -1,7 +1,16 @@
 import { defineConfig } from 'vitepress'
 import { tokenize } from './search.mjs'
 import wikis from '../data/wikis.json'
-const sidebar = Object.fromEntries(Object.entries(wikis).map(([id, wiki]) => ['/games/' + id + '/', [{ text: wiki.title, link: '/games/' + id + '/' }, ...wiki.groups.map(group => ({ text: group.title, items: [{ text: '浏览分类', link: '/games/' + id + '/categories/' + group.id }, ...group.items.map(item => ({ text: item.title, link: '/games/' + id + '/' + item.path }))] }))]]))
+const groupNode=(game,wiki,group)=>({text:group.title,collapsed:true,items:[
+ {text:'浏览分类',link:'/games/'+game+'/categories/'+group.id},
+ ...group.items.map(item=>({text:item.title,link:'/games/'+game+'/'+item.path})),
+ ...wiki.groups.filter(g=>g.parent===group.id).map(g=>groupNode(game,wiki,g))
+]})
+const sidebar=Object.fromEntries(Object.entries(wikis).map(([id,wiki])=>['/games/'+id+'/',[
+ {text:wiki.title,link:'/games/'+id+'/'},
+ {text:'全部页面',link:'/games/'+id+'/all-pages'},
+ ...wiki.groups.filter(g=>!g.parent).map(g=>groupNode(id,wiki,g))
+]]))
 export default defineConfig({
   lang: 'zh-CN', title: 'NX Archive', description: 'Switch / Switch 2 游戏攻略与地图档案',
   base: '/nx-archive/', lastUpdated: true,

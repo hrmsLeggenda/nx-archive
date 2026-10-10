@@ -70,6 +70,41 @@
             "path": "sources"
           }
         ]
+      },
+      {
+        "id": "characters",
+        "title": "人物",
+        "parent": "training",
+        "items": [],
+        "description": "从结构化资料生成的独立条目；分类成员与搜索索引随构建自动更新。"
+      },
+      {
+        "id": "classes",
+        "title": "职业",
+        "parent": "training",
+        "items": [],
+        "description": "从结构化资料生成的独立条目；分类成员与搜索索引随构建自动更新。"
+      },
+      {
+        "id": "places",
+        "title": "地点",
+        "parent": "exploration",
+        "items": [],
+        "description": "从结构化资料生成的独立条目；分类成员与搜索索引随构建自动更新。"
+      },
+      {
+        "id": "items",
+        "title": "物品",
+        "parent": "exploration",
+        "items": [],
+        "description": "从结构化资料生成的独立条目；分类成员与搜索索引随构建自动更新。"
+      },
+      {
+        "id": "quests",
+        "title": "任务与章节节点",
+        "parent": "story",
+        "items": [],
+        "description": "从结构化资料生成的独立条目；分类成员与搜索索引随构建自动更新。"
       }
     ],
     "coverage": "已导入62人物与58职业；资源54条，覆盖4处地牢的两个阶段；时间轴13个节点。地图为地点索引，真实坐标待补充。"

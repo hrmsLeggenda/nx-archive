@@ -3,7 +3,15 @@ export function normalizeUrl(url) { return url.replace(/\.html$/, '').replace(/\
 export function pageCategories(url, frontmatter, wikis) {
  const game=gameFromUrl(url), wiki=wikis[game]
  if(!wiki) return []
- if(Array.isArray(frontmatter.categories)) return [...new Set(frontmatter.categories)]
+ if(Array.isArray(frontmatter.categories)) {
+ const ids=new Set(frontmatter.categories)
+ for(const id of frontmatter.categories) {
+  let parent=wiki.groups.find(g=>g.id===id)?.parent
+  const seen=new Set([id])
+  while(parent&&!seen.has(parent)){seen.add(parent);ids.add(parent);parent=wiki.groups.find(g=>g.id===parent)?.parent}
+ }
+ return [...ids]
+ }
  if(url.includes('/categories/') || url.endsWith('/all-pages.html')) return []
  const path=normalizeUrl(url).slice(('/games/'+game+'/').length)
  const group=wiki.groups.find(g=>g.items.some(i=>i.path===path))

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Export factual fields only from a pinned, verified SQLite snapshot."""
-import hashlib, json, sqlite3, tempfile, urllib.request
+import hashlib, json, re, sqlite3, tempfile, urllib.request
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 LOCK = json.loads((ROOT / "sources/fire-emblem-fw/upstream.json").read_text())
@@ -65,6 +65,9 @@ def run():
                  "| --- | " + " | ".join(["---"]*9) + " | --- |"]
         for r in data[kind]:
             name = (r.get("nameZh") or r["name"])
+            match = re.search(r"/archives/(\d+)",r["source"] or "")
+            eid = kind+"-"+(match.group(1) if match else hashlib.sha256(r["name"].encode()).hexdigest()[:16])
+            name = f"[{name}](/games/fire-emblem-fw/entries/{kind}/{eid})"
             values = ["—" if r["growths"][s] is None else str(r["growths"][s]) for s in STATS]
             lines.append("| " + name + " | " + " | ".join(values) + f" | [来源]({r['source']}) |")
         lines += ["",f"固定上游版本：`{LOCK['commit']}`。", "", "[返回数据库](../../database)"]

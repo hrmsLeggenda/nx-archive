@@ -4,3 +4,4 @@ docs/.vitepress/dist/
 .env*
 !.env.example
 docs/games/fire-emblem-fw/data/generated/
+docs/games/fire-emblem-fw/entries/
