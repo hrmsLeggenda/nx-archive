@@ -16,7 +16,7 @@ const phaseLabels={part1:'第一部',part3:'第三部·救世篇'}
 const rows=computed(()=>(props.mode==='timeline'?timeline:resources).filter(r=>matchesRecord(r,phase.value,route.value,query.value) && (!locationFilter.value || r.locationId===locationFilter.value) && (!method.value || r.method===method.value) && (!chapter.value || r.chapter===Number(chapter.value))))
 const map=computed(()=>{
  const groups=[...new Set(rows.value.map(r=>r.locationId))]
- return {id:'resource-index-v2-'+phase.value+'-'+(route.value||'all'),gameId:'fire-emblem-fw',mode:'index',title:'资源地点索引',
+ return {id:'resource-index-v2-'+phase.value+'-'+(route.value||'all'),gameId:'fire-emblem-fw',progressIds:[...new Set(resources.map(r=>r.locationId))],mode:'index',title:'资源地点索引',
  notice:'卡片位置仅为阅读布局，不表示实际坐标、距离或通行关系。宝箱与材料分开记录；未录入资源不代表游戏中不存在。',
  markers:groups.map((id,i)=>{const group=rows.value.filter(r=>r.locationId===id);const r=group[0];return {id,name:r.location,type:'地牢',x:20+(i%2)*45,y:25+Math.floor(i/2)*35,description:phaseLabels[r.phase]+' · '+group.map(x=>(x.method==='chest'?'宝箱：':'采集池：')+x.resource).join('；'),link:entityForName(graph,'places',r.locationOriginal)?.url || '/games/fire-emblem-fw/resources'}})}
 })
