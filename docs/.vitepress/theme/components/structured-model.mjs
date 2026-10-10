@@ -12,7 +12,7 @@ export function decodeValue(text,spec){
 }
 export function validateValue(value,spec){
  if(value===null)return Boolean(spec.nullable)
- const text=v=>typeof v==='string'&&Boolean(v.trim())&&v.length<=2000&&!/[<>]/.test(v)
+ const text=v=>typeof v==='string'&&Boolean(v.trim())&&v.length<=2000&&!/[<>]|\{\{|\}\}/.test(v)
  if(spec.type==='integer')return Number.isInteger(value)&&value>=spec.min&&value<=spec.max
  if(spec.type==='enum')return spec.values.includes(value)
  if(spec.type==='list')return Array.isArray(value)&&value.length<=50&&value.every(text)&&new Set(value).size===value.length&&(!spec.values||(value.length>0&&value.every(v=>spec.values.includes(v))))
@@ -44,7 +44,7 @@ export function buildPatch(record,draft){
   changes.push({field,baseValue:same&&!draft.rebase?old.baseValue:record.baseline[field],value})
  }
  const sources=draft.sources.split(/\r?\n/).map(s=>s.trim()).filter(Boolean)
- if(!sources.length||sources.length>10||sources.some(s=>!/^https?:\/\/[^\s<>]+$/.test(s)))errors.push('请填写有效的公开来源链接。')
+ if(!sources.length||sources.length>10||sources.some(s=>!/^https?:\/\/[^\s<>{}]+$/.test(s)))errors.push('请填写有效的公开来源链接。')
  const date=typeof draft.checked==='string'&&draft.checked.match(/^\d{4}-\d{2}-\d{2}$/)&&new Date(draft.checked)
  if(!date||Number.isNaN(date.getTime())||date.toISOString().slice(0,10)!==draft.checked)errors.push('核对日期无效。')
  if(!validateValue(draft.reason,{type:'text'}))errors.push('请填写勘误原因或编辑摘要。')

@@ -17,7 +17,7 @@ def set_value(record,field,value):
     for key in keys[:-1]: record=record[key]
     record[keys[-1]]=copy.deepcopy(value)
 def valid_text(value):
-    return isinstance(value,str) and bool(value.strip()) and len(value)<=2000 and not re.search(r"[<>]",value)
+    return isinstance(value,str) and bool(value.strip()) and len(value)<=2000 and not re.search(r"[<>]|\{\{|\}\}",value)
 def validate_value(field,value,definition):
     if value is None:
         if not definition.get("nullable"): raise ValueError(field+": null is not allowed")
@@ -57,7 +57,7 @@ def validate_patch(patch):
         if isinstance(change["baseValue"],dict): raise ValueError("Invalid baseline field value")
     evidence=patch["evidence"]
     if not isinstance(evidence,dict) or set(evidence)!={"sources","checked","gameVersion","reason"}: raise ValueError("Invalid evidence")
-    if not isinstance(evidence["sources"],list) or not evidence["sources"] or len(evidence["sources"])>10 or not all(isinstance(s,str) and re.fullmatch(r"https?://[^\s<>]+",s) for s in evidence["sources"]): raise ValueError("A public source URL is required")
+    if not isinstance(evidence["sources"],list) or not evidence["sources"] or len(evidence["sources"])>10 or not all(isinstance(s,str) and re.fullmatch(r"https?://[^\s<>{}]+",s) for s in evidence["sources"]): raise ValueError("A public source URL is required")
     try:
         if datetime.date.fromisoformat(evidence["checked"]).isoformat()!=evidence["checked"]: raise ValueError()
     except (ValueError,TypeError): raise ValueError("Invalid checked date")
