@@ -1,10 +1,24 @@
 <script setup>
-import { computed } from 'vue'
-import { useRoute, withBase } from 'vitepress'
+import {computed,ref,onMounted,onUnmounted} from 'vue'
+import {useRoute,useData,withBase} from 'vitepress'
 import wikis from '../../../data/wikis.json'
-const route = useRoute()
-const game = computed(() => route.path.match(/\/games\/([^/]+)\//)?.[1])
-const wiki = computed(() => wikis[game.value])
+import {data} from './wiki-pages.data'
+import {gameFromUrl,normalizeUrl} from './wiki-model.mjs'
+const route=useRoute(), {page}=useData()
+const desktop=ref(false)
+let media
+const resize=()=>{desktop.value=media.matches}
+onMounted(()=>{media=window.matchMedia('(min-width:960px)');resize();media.addEventListener('change',resize)})
+onUnmounted(()=>media?.removeEventListener('change',resize))
+const game=computed(()=>gameFromUrl(route.path))
+const wiki=computed(()=>wikis[game.value])
+const current=computed(()=>data.find(p=>normalizeUrl(p.url)===normalizeUrl(route.path.replace(/^\/nx-archive/,''))))
+const sourcePath=computed(()=>page.value.relativePath)
 </script>
-<template><nav v-if="wiki" class="game-context" aria-label="游戏 Wiki 导航"><a :href="withBase('/games/')">游戏档案</a><span> / </span><a :href="withBase('/games/' + game + '/')">{{ wiki.title }} Wiki</a><div><template v-for="group in wiki.groups" :key="group.id"><a v-for="item in group.items" :key="item.path" :href="withBase('/games/' + game + '/' + item.path)">{{ item.title }}</a></template></div></nav></template>
-<style scoped>.game-context { margin-bottom:24px;border-bottom:1px solid var(--vp-c-divider);padding-bottom:16px;font-size:13px; }.game-context a { color:var(--vp-c-brand-1); }.game-context div { display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:12px; }</style>
+<template><header v-if="wiki" class="wiki-context">
+<nav class="breadcrumbs" aria-label="面包屑"><a :href="withBase('/')">NX Archive</a><span>›</span><a :href="withBase('/games/')">游戏 Wiki</a><span>›</span><a :href="withBase('/games/'+game+'/')">{{wiki.title}}</a></nav>
+<details class="wiki-navigation" :open="desktop"><summary>{{wiki.title}} · Wiki 导航</summary><nav aria-label="游戏 Wiki 导航"><a :href="withBase('/games/'+game+'/')">Wiki 首页</a><a v-for="group in wiki.groups.filter(g=>!g.parent)" :key="group.id" :href="withBase('/games/'+game+'/categories/'+group.id)">{{group.title}}</a><a :href="withBase('/games/'+game+'/all-pages')">全部页面</a></nav></details>
+<div v-if="sourcePath && !current?.generated" class="page-actions" aria-label="页面操作"><span aria-current="page">阅读</span><a :href="'https://github.com/hrmsLeggenda/nx-archive/edit/main/docs/'+sourcePath" target="_blank" rel="noopener noreferrer">在 GitHub 编辑</a><a :href="'https://github.com/hrmsLeggenda/nx-archive/commits/main/docs/'+sourcePath" target="_blank" rel="noopener noreferrer">版本历史</a></div>
+<div v-else-if="current?.generated" class="page-actions"><span>自动生成条目</span><a :href="withBase('/games/'+game+'/sources')">来源与维护说明</a></div>
+<nav v-if="current?.categories.length" class="category-tags" aria-label="页面分类"><a v-for="id in current.categories" :key="id" :href="withBase('/games/'+game+'/categories/'+id)">{{wiki.groups.find(g=>g.id===id)?.title || id}}</a></nav>
+</header></template>
