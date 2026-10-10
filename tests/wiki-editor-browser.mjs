@@ -21,6 +21,7 @@ try{
   return route.fulfill(apiMode==='missing'?{status:404,body:'{}',contentType:'application/json'}:{status:200,body:JSON.stringify({sha:apiMode==='clean'?sha:'changed'}),contentType:'application/json'})
  })
  await page.goto(base+'games/fire-emblem-fw/edit.html')
+ assert.ok((await page.locator('#check-dark-mode').textContent()).length<1000,'appearance bootstrap must stay bounded across page builds')
  await page.getByLabel('页面路径',{exact:true}).fill('guides/editor-smoke')
  await page.getByLabel('页面标题',{exact:true}).fill('编辑器验收草稿')
  await page.getByLabel('资料来源',{exact:true}).fill('https://github.com/hrmsLeggenda/nx-archive')

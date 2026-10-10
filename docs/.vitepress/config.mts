@@ -18,7 +18,7 @@ export default defineConfig({
   transformHead({head}) {
     // VitePress 1.6.4's appearance bootstrap reads localStorage without a guard.
     const script=head.find(([tag,attrs])=>tag==='script' && attrs?.id==='check-dark-mode')
-    if(script) script[2]='try {'+script[2]+'} catch { if(window.matchMedia("(prefers-color-scheme: dark)").matches) document.documentElement.classList.add("dark") }'
+    if(script && !script[2]?.startsWith('try {')) script[2]='try {'+script[2]+'} catch { if(window.matchMedia("(prefers-color-scheme: dark)").matches) document.documentElement.classList.add("dark") }'
   },
   themeConfig: {
     logo: '/logo.svg', siteTitle: 'NX Archive',
