@@ -16,7 +16,7 @@ const catalog=computed(()=>index.map(p=>({...p,path:p.url.replace('/games/'+p.ga
 const errors=computed(()=>validateDocument({raw:raw.value,game:game.value,path:path.value,wikis,pages:catalog.value,originalPath:originalPath.value,summary:summary.value}))
 const preview=computed(()=>previewMarkdown(raw.value))
 const diff=computed(()=>lineDiff(baseRaw.value,raw.value))
-const key=computed(()=>draftKey(game.value,originalPath.value||entity.value?.entityId||''))
+let sessionKey=''
 const target=computed(()=>githubTarget(game.value,path.value,Boolean(originalPath.value)))
 const canSubmit=computed(()=>ready.value&&!invalidTarget.value&&!errors.value.length&&!draftConflict.value&&
  (checkState.value==='clean'||(checkState.value==='unavailable'&&acknowledged.value)))
@@ -33,7 +33,7 @@ function blank(type){
 }
 function persist(){
  if(!ready.value||invalidTarget.value||pendingDraft.value)return
- const ok=saveDraft(storage(),key.value,{raw:raw.value,path:path.value,summary:summary.value,baseSha:baseSha.value,baseRaw:baseRaw.value,template:template.value})
+ const ok=saveDraft(storage(),sessionKey,{raw:raw.value,path:path.value,summary:summary.value,baseSha:baseSha.value,baseRaw:baseRaw.value,template:template.value})
  storageStatus.value=ok?'草稿已保存在此浏览器':'草稿保存失败，请复制或下载 Markdown。'
 }
 function init(){
@@ -47,7 +47,7 @@ function init(){
  originalPath.value=current?.path||'';baseRaw.value=current?.raw||'';baseSha.value=current?.sha||null
  template.value=entity.value?'note':'guide';path.value=current?.path||(entity.value?'notes/'+eid:'guides/')
  raw.value=current?.raw||blank(template.value);summary.value='';tab.value='write'
- pendingDraft.value=readDraft(storage(),key.value);draftConflict.value=false;checkState.value='unchecked';status.value='';copied.value=false
+ sessionKey=draftKey(game.value,originalPath.value||entity.value?.entityId||'');pendingDraft.value=readDraft(storage(),sessionKey);draftConflict.value=false;checkState.value='unchecked';status.value='';copied.value=false
  ready.value=true
 }
 function restoreDraft(){
@@ -96,7 +96,7 @@ watch([raw,path,summary],()=>{
  epoch++;controller?.abort();checking.value=false;checkState.value='unchecked';acknowledged.value=false;copied.value=false
  clearTimeout(timer);timer=setTimeout(persist,450)
 })
-watch(game,()=>{if(ready.value)init()})
+watch(game,()=>{if(ready.value){persist();init()}})
 onMounted(init)
 onBeforeUnmount(()=>{persist();clearTimeout(timer);epoch++;controller?.abort()})
 </script>

@@ -45,3 +45,5 @@
 .editor-notice,.editor-handoff,.editor-validation{border:1px solid var(--vp-c-divider);border-radius:10px;padding:14px;margin:16px 0;background:var(--vp-c-bg-soft)}
 .editor-hint{font-size:13px;color:var(--vp-c-text-2)}.editor-summary{margin:16px 0}.editor-check-status{overflow-wrap:anywhere}
 @media(max-width:640px){.editor-fields{grid-template-columns:minmax(0,1fr)}.editor-tools{align-items:stretch;flex-direction:column}.editor-markdown{min-height:300px}.editor-preview{padding:12px}}
+
+.page-metadata{font-size:13px;margin-top:16px}.page-metadata summary{cursor:pointer}.page-metadata p{margin:8px 0}.page-metadata ul{padding-left:18px}
