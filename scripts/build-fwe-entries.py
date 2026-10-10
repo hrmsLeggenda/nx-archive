@@ -59,6 +59,8 @@ def run():
         text+=f"**名称记录**：{cell(e['name'])}\n\n"
         if e["source"]: text+=f"[查看原始来源]({e['source']})\n\n"
         text+="</div>\n\n"+body+"\n\n<EntryRelations />\n\n"
+        note=WIKI/"notes"/(e["id"]+".md")
+        if note.exists(): text+=f"[查看人工补充与勘误]({BASE}/notes/{e['id']})\n\n"
         text+=f"[来源与维护说明]({BASE}/sources) · [返回游戏 Wiki]({BASE}/)\n"
         path.write_text(text,encoding="utf-8")
     labels=["生命","力量","魔力","速度","技巧","防御","魔防","幸运","魅力"]

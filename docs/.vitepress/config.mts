@@ -9,6 +9,7 @@ const groupNode=(game,wiki,group)=>({text:group.title,collapsed:true,items:[
 const sidebar=Object.fromEntries(Object.entries(wikis).map(([id,wiki])=>['/games/'+id+'/',[
  {text:wiki.title,link:'/games/'+id+'/'},
  {text:'全部页面',link:'/games/'+id+'/all-pages'},
+ {text:'创建页面',link:'/games/'+id+'/edit'},
  ...wiki.groups.filter(g=>!g.parent).map(g=>groupNode(id,wiki,g))
 ]]))
 export default defineConfig({

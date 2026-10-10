@@ -30,3 +30,18 @@
 
 .entity-infobox{background:var(--vp-c-bg-soft);border:1px solid var(--vp-c-divider);border-radius:12px;padding:14px 20px;margin:20px 0}
 .entity-infobox p{margin:8px 0}
+
+.wiki-editor{min-width:0}.editor-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:24px 0}
+.editor-fields label,.editor-summary{display:flex;flex-direction:column;gap:6px}
+.wiki-editor input:not([type=checkbox]),.wiki-editor select,.wiki-editor textarea{width:100%;border:1px solid var(--vp-c-divider);border-radius:6px;padding:8px;background:var(--vp-c-bg);color:var(--vp-c-text-1);font:inherit}
+.wiki-editor textarea{resize:vertical}.wiki-editor button{padding:7px 12px;border:1px solid var(--vp-c-divider);border-radius:6px;background:var(--vp-c-bg-soft);cursor:pointer}
+.wiki-editor button:disabled{opacity:.5;cursor:not-allowed}.wiki-editor button:focus-visible,.wiki-editor input:focus-visible,.wiki-editor textarea:focus-visible,.wiki-editor select:focus-visible{outline:2px solid var(--vp-c-brand-1);outline-offset:2px}
+.editor-fields fieldset,.editor-full{grid-column:1/-1}.editor-fields fieldset{border:1px solid var(--vp-c-divider);padding:12px;border-radius:8px}
+.wiki-editor .editor-category{display:inline-flex;align-items:center;gap:8px;margin:4px 12px 4px 0;flex-direction:row}
+.editor-tabs,.editor-tools{display:flex;flex-wrap:wrap;gap:10px;margin:20px 0}.editor-tabs [aria-selected=true]{border-color:var(--vp-c-brand-1);color:var(--vp-c-brand-1)}
+.wiki-editor .editor-markdown{min-height:400px;font-family:var(--vp-font-family-mono);font-size:13px;line-height:1.7}
+.editor-preview{border:1px solid var(--vp-c-divider);border-radius:10px;padding:20px;overflow-wrap:anywhere}
+.editor-diff{white-space:pre-wrap!important;overflow-wrap:anywhere;padding:14px!important}.editor-diff span{display:block}.editor-diff .added{background:rgba(16,168,155,.15)}.editor-diff .removed{background:rgba(210,65,80,.15)}
+.editor-notice,.editor-handoff,.editor-validation{border:1px solid var(--vp-c-divider);border-radius:10px;padding:14px;margin:16px 0;background:var(--vp-c-bg-soft)}
+.editor-hint{font-size:13px;color:var(--vp-c-text-2)}.editor-summary{margin:16px 0}.editor-check-status{overflow-wrap:anywhere}
+@media(max-width:640px){.editor-fields{grid-template-columns:minmax(0,1fr)}.editor-tools{align-items:stretch;flex-direction:column}.editor-markdown{min-height:300px}.editor-preview{padding:12px}}
