@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "gameId": "fire-emblem-fw",
+  "dataset": "characters",
+  "recordId": "characters-620168",
+  "changes": [
+    {
+      "field": "nameZh",
+      "baseValue": null,
+      "value": "迪托利希"
+    }
+  ],
+  "evidence": {
+    "sources": [
+      "https://github.com/hrmsLeggenda/nx-archive/blob/89e6beec21816d06d3d96018baf0ad480fbd656d/scripts/import-fwe.py"
+    ],
+    "checked": "2026-10-10",
+    "gameVersion": "未确认",
+    "reason": "迁移此前已发布的中文显示名；保持原有名称，未新增游戏事实核对。"
+  }
+}

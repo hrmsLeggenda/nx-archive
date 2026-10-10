@@ -13,9 +13,10 @@ def cell(value):
     return str(value if value not in (None,"") else "未记录").replace("|","\\|").replace("\n"," ")
 def link(entity): return f"[{entity['title']}]({entity['url']})"
 def run():
+    corrections=json.loads((WIKI/"data/generated/corrections.json").read_text())
     db=json.loads((WIKI/"data/generated/database.json").read_text())
-    resources=json.loads((WIKI/"data/resources.json").read_text())
-    timeline=json.loads((WIKI/"data/timeline.json").read_text())
+    resources=json.loads((WIKI/"data/generated/resources.json").read_text())
+    timeline=json.loads((WIKI/"data/generated/timeline.json").read_text())
     output=WIKI/"entries"
     if output.exists(): shutil.rmtree(output)
     entities={}
@@ -28,8 +29,8 @@ def run():
                 "aliases":aliases or [],"url":f"{BASE}/entries/{kind}/{eid}","source":source}
         entities[eid]=entity
         return entity
-    chars={r["name"]:add("characters",r["name"],r.get("nameZh") or r["name"],["characters"],r["source"],aliases=[r["name"]]) for r in db["characters"]}
-    classes={r["name"]:add("classes",r["name"],r["name"],["classes"],r["source"]) for r in db["classes"]}
+    chars={r["name"]:add("characters",r["name"],r.get("nameZh") or r["name"],["characters"],r["source"],aliases=[r["name"],*r.get("aliases",[])]) for r in db["characters"]}
+    classes={r["name"]:add("classes",r["name"],r.get("nameZh") or r["name"],["classes"],r["source"],aliases=r.get("aliases",[])) for r in db["classes"]}
     places={}
     for r in resources:
         places[r["locationId"]]=add("places",r["locationOriginal"],r["location"],["places","exploration"],r["source"],"place-"+r["locationId"],[r["locationOriginal"]])
@@ -59,6 +60,12 @@ def run():
         text+=f"**名称记录**：{cell(e['name'])}\n\n"
         if e["source"]: text+=f"[查看原始来源]({e['source']})\n\n"
         text+="</div>\n\n"+body+"\n\n<EntryRelations />\n\n"
+        related=[c for c in corrections["report"] if (c["dataset"] in ["characters","classes"] and c["recordId"]==e["id"]) or (c["dataset"]=="timeline" and "quest-"+c["recordId"]==e["id"]) or (c["dataset"]=="resources" and any(r["id"]==c["recordId"] and ("place-"+r["locationId"]==e["id"] or items[r["resource"]]["id"]==e["id"]) for r in resources))]
+        if related:
+            text+="## 人工勘误记录\n\n"
+            for c in related:
+                text+=f"- 字段 {cell(c['field'])}：基线 {cell(c['baseline'])} → 有效值 {cell(c['value'])}；状态 {dict(applied='已应用', **{'needs-review':'上游已变更，待复核', 'matches-upstream':'上游已一致'})[c['status']]}。核对 {c['evidence']['checked']}；版本 {cell(c['evidence']['gameVersion'])}。{cell(c['evidence']['reason'])}\n"
+                text+=" · ".join(f"[勘误来源]({url})" for url in c["evidence"]["sources"])+"\n\n"
         note=WIKI/"notes"/(e["id"]+".md")
         if note.exists(): text+=f"[查看人工补充与勘误]({BASE}/notes/{e['id']})\n\n"
         text+=f"[来源与维护说明]({BASE}/sources) · [返回游戏 Wiki]({BASE}/)\n"
@@ -106,7 +113,7 @@ def run():
         body="真实坐标、通行关系与解锁条件尚未确认。\n\n"
         for p in ["part1","part3"]:
             body+="## "+phase[p]+"\n\n| 物品 | 获取方式 | 数量 | 刷新记录 |\n| --- | --- | --- | --- |\n"
-            body+="\n".join(f"| {link(items[r['resource']])} | {method[r['method']]} | {cell(r['quantity'])} | {'每主角一次' if r['refresh']=='once-per-protagonist' else '未确认'} |" for r in records if r["phase"]==p)+"\n\n"
+            body+="\n".join(f"| {link(items[r['resource']])} | {method[r['method']]} | {cell(r['quantity'])} | {'每主角一次' if r['refresh']=='once-per-protagonist' else '可重复获取' if r['refresh']=='repeatable' else '未确认'} |" for r in records if r["phase"]==p)+"\n\n"
         body+=f"[在阶段地图中查看]({BASE}/maps/world?location={loc}) · [筛选这个地点的资源]({BASE}/resources?location={loc})"
         write(e,body)
     for name,e in items.items():

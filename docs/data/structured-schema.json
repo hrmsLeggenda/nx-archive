@@ -1,0 +1,388 @@
+{
+  "schemaVersion": 1,
+  "gameId": "fire-emblem-fw",
+  "datasets": {
+    "characters": {
+      "label": "人物",
+      "fields": {
+        "nameZh": {
+          "label": "中文名称",
+          "type": "text",
+          "nullable": true
+        },
+        "aliases": {
+          "label": "别名",
+          "type": "list"
+        },
+        "growths.HP": {
+          "label": "生命成长率%",
+          "type": "integer",
+          "min": 0,
+          "max": 300,
+          "nullable": true
+        },
+        "growths.Str": {
+          "label": "力量成长率%",
+          "type": "integer",
+          "min": 0,
+          "max": 300,
+          "nullable": true
+        },
+        "growths.Mag": {
+          "label": "魔力成长率%",
+          "type": "integer",
+          "min": 0,
+          "max": 300,
+          "nullable": true
+        },
+        "growths.Spd": {
+          "label": "速度成长率%",
+          "type": "integer",
+          "min": 0,
+          "max": 300,
+          "nullable": true
+        },
+        "growths.Dex": {
+          "label": "技巧成长率%",
+          "type": "integer",
+          "min": 0,
+          "max": 300,
+          "nullable": true
+        },
+        "growths.Def": {
+          "label": "防御成长率%",
+          "type": "integer",
+          "min": 0,
+          "max": 300,
+          "nullable": true
+        },
+        "growths.Res": {
+          "label": "魔防成长率%",
+          "type": "integer",
+          "min": 0,
+          "max": 300,
+          "nullable": true
+        },
+        "growths.Lck": {
+          "label": "幸运成长率%",
+          "type": "integer",
+          "min": 0,
+          "max": 300,
+          "nullable": true
+        },
+        "growths.Cha": {
+          "label": "魅力成长率%",
+          "type": "integer",
+          "min": 0,
+          "max": 300,
+          "nullable": true
+        },
+        "faction": {
+          "label": "阵营",
+          "type": "text",
+          "nullable": true
+        },
+        "ability": {
+          "label": "个人能力名称",
+          "type": "text",
+          "nullable": true
+        }
+      }
+    },
+    "classes": {
+      "label": "职业",
+      "fields": {
+        "nameZh": {
+          "label": "中文名称",
+          "type": "text",
+          "nullable": true
+        },
+        "aliases": {
+          "label": "别名",
+          "type": "list"
+        },
+        "growths.HP": {
+          "label": "生命职业成长%",
+          "type": "integer",
+          "min": -100,
+          "max": 300,
+          "nullable": true
+        },
+        "growths.Str": {
+          "label": "力量职业成长%",
+          "type": "integer",
+          "min": -100,
+          "max": 300,
+          "nullable": true
+        },
+        "growths.Mag": {
+          "label": "魔力职业成长%",
+          "type": "integer",
+          "min": -100,
+          "max": 300,
+          "nullable": true
+        },
+        "growths.Spd": {
+          "label": "速度职业成长%",
+          "type": "integer",
+          "min": -100,
+          "max": 300,
+          "nullable": true
+        },
+        "growths.Dex": {
+          "label": "技巧职业成长%",
+          "type": "integer",
+          "min": -100,
+          "max": 300,
+          "nullable": true
+        },
+        "growths.Def": {
+          "label": "防御职业成长%",
+          "type": "integer",
+          "min": -100,
+          "max": 300,
+          "nullable": true
+        },
+        "growths.Res": {
+          "label": "魔防职业成长%",
+          "type": "integer",
+          "min": -100,
+          "max": 300,
+          "nullable": true
+        },
+        "growths.Lck": {
+          "label": "幸运职业成长%",
+          "type": "integer",
+          "min": -100,
+          "max": 300,
+          "nullable": true
+        },
+        "growths.Cha": {
+          "label": "魅力职业成长%",
+          "type": "integer",
+          "min": -100,
+          "max": 300,
+          "nullable": true
+        },
+        "statBonus.HP": {
+          "label": "生命属性加值",
+          "type": "integer",
+          "min": -100,
+          "max": 300,
+          "nullable": true
+        },
+        "statBonus.Str": {
+          "label": "力量属性加值",
+          "type": "integer",
+          "min": -100,
+          "max": 300,
+          "nullable": true
+        },
+        "statBonus.Mag": {
+          "label": "魔力属性加值",
+          "type": "integer",
+          "min": -100,
+          "max": 300,
+          "nullable": true
+        },
+        "statBonus.Spd": {
+          "label": "速度属性加值",
+          "type": "integer",
+          "min": -100,
+          "max": 300,
+          "nullable": true
+        },
+        "statBonus.Dex": {
+          "label": "技巧属性加值",
+          "type": "integer",
+          "min": -100,
+          "max": 300,
+          "nullable": true
+        },
+        "statBonus.Def": {
+          "label": "防御属性加值",
+          "type": "integer",
+          "min": -100,
+          "max": 300,
+          "nullable": true
+        },
+        "statBonus.Res": {
+          "label": "魔防属性加值",
+          "type": "integer",
+          "min": -100,
+          "max": 300,
+          "nullable": true
+        },
+        "statBonus.Lck": {
+          "label": "幸运属性加值",
+          "type": "integer",
+          "min": -100,
+          "max": 300,
+          "nullable": true
+        },
+        "statBonus.Cha": {
+          "label": "魅力属性加值",
+          "type": "integer",
+          "min": -100,
+          "max": 300,
+          "nullable": true
+        },
+        "license": {
+          "label": "许可证",
+          "type": "text",
+          "nullable": true
+        },
+        "primary_skill": {
+          "label": "主要技能",
+          "type": "text",
+          "nullable": true
+        },
+        "secondary_skill": {
+          "label": "次要技能",
+          "type": "text",
+          "nullable": true
+        },
+        "class_ability": {
+          "label": "职业能力名称",
+          "type": "text",
+          "nullable": true
+        },
+        "master_ability": {
+          "label": "精通能力名称",
+          "type": "text",
+          "nullable": true
+        }
+      }
+    },
+    "resources": {
+      "label": "阶段资源",
+      "fields": {
+        "quantity": {
+          "label": "数量",
+          "type": "integer",
+          "min": 0,
+          "max": 9999,
+          "nullable": true
+        },
+        "unlock": {
+          "label": "解锁条件",
+          "type": "text",
+          "nullable": true
+        },
+        "refresh": {
+          "label": "刷新记录",
+          "type": "enum",
+          "values": [
+            "once-per-protagonist",
+            "repeatable"
+          ],
+          "nullable": true
+        },
+        "method": {
+          "label": "获取方式",
+          "type": "enum",
+          "values": [
+            "chest",
+            "gather"
+          ],
+          "nullable": false
+        },
+        "certainty": {
+          "label": "确定性",
+          "type": "enum",
+          "values": [
+            "fixed",
+            "random-pool",
+            "conditional"
+          ],
+          "nullable": false
+        },
+        "phase": {
+          "label": "阶段",
+          "type": "enum",
+          "values": [
+            "part1",
+            "part3"
+          ],
+          "nullable": false
+        },
+        "routes": {
+          "label": "适用路线",
+          "type": "list",
+          "values": [
+            "Cai",
+            "Dietrich",
+            "Theodora",
+            "Leda",
+            "Salvation"
+          ]
+        }
+      }
+    },
+    "timeline": {
+      "label": "任务与章节",
+      "fields": {
+        "title": {
+          "label": "标题",
+          "type": "text",
+          "nullable": false
+        },
+        "chapter": {
+          "label": "章节",
+          "type": "integer",
+          "min": 1,
+          "max": 50,
+          "nullable": false
+        },
+        "condition": {
+          "label": "条件",
+          "type": "text",
+          "nullable": false
+        },
+        "rewards": {
+          "label": "奖励",
+          "type": "list"
+        },
+        "deadline": {
+          "label": "游戏内截止月日",
+          "type": "monthday",
+          "nullable": true
+        },
+        "deadlineNote": {
+          "label": "截止说明",
+          "type": "text",
+          "nullable": true
+        },
+        "certainty": {
+          "label": "确定性",
+          "type": "enum",
+          "values": [
+            "fixed",
+            "conditional"
+          ],
+          "nullable": false
+        },
+        "phase": {
+          "label": "阶段",
+          "type": "enum",
+          "values": [
+            "part1",
+            "part3"
+          ],
+          "nullable": false
+        },
+        "routes": {
+          "label": "适用路线",
+          "type": "list",
+          "values": [
+            "Cai",
+            "Dietrich",
+            "Theodora",
+            "Leda",
+            "Salvation"
+          ]
+        }
+      }
+    }
+  }
+}
