@@ -62,6 +62,7 @@ try{
  await page.getByRole('checkbox',{name:'覆盖 中文名称',exact:true}).uncheck()
  await page.getByRole('tab',{name:'JSON 与差异',exact:true}).click()
  assert.deepEqual(JSON.parse(await page.locator('.structured-json').textContent()).changes,[])
+ await page.waitForFunction(id=>JSON.parse(localStorage.getItem('nx-archive:structured:v1:fire-emblem-fw:characters:'+id))?.draft.active.length===0,cai.id)
  // A stale baseline draft requires explicit re-review.
  await page.evaluate(id=>{
   const key='nx-archive:structured:v1:fire-emblem-fw:characters:'+id
@@ -82,6 +83,13 @@ try{
  await page.setViewportSize({width:390,height:844})
  await page.screenshot({path:'structured-mobile.png',fullPage:true})
  assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth+1))
+ // A translated class label must keep its immutable simulator value.
+ await page.goto(base+'database.html')
+ const job=page.getByLabel('职业',{exact:true}),original=await job.inputValue()
+ await job.evaluate(select=>{select.selectedOptions[0].textContent='职业中文显示测试夹具'})
+ await job.selectOption({label:'职业中文显示测试夹具'})
+ assert.equal(await job.inputValue(),original)
+ assert.equal(await page.locator('table').last().locator('tbody tr').count(),9)
  const denied=await browser.newContext()
  await denied.addInitScript(()=>Object.defineProperty(window,'localStorage',{get(){throw new Error('storage denied')}}))
  const blocked=await denied.newPage();blocked.on('pageerror',e=>errors.push(e.message))
