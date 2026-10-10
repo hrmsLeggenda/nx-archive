@@ -31,6 +31,7 @@ def validate_value(field,value,definition):
         if ok and definition.get("values"): ok=bool(value) and all(v in definition["values"] for v in value)
     elif kind=="monthday":
         try:
+            if not isinstance(value,str) or not re.fullmatch(r"\d{1,2}/\d{1,2}",value): raise ValueError()
             month,day=map(int,value.split("/"))
             datetime.date(2000,month,day);ok=True
         except (ValueError,TypeError,AttributeError): ok=False

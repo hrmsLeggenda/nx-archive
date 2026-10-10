@@ -113,7 +113,7 @@ def run():
         body="真实坐标、通行关系与解锁条件尚未确认。\n\n"
         for p in ["part1","part3"]:
             body+="## "+phase[p]+"\n\n| 物品 | 获取方式 | 数量 | 刷新记录 |\n| --- | --- | --- | --- |\n"
-            body+="\n".join(f"| {link(items[r['resource']])} | {method[r['method']]} | {cell(r['quantity'])} | {'每主角一次' if r['refresh']=='once-per-protagonist' else '未确认'} |" for r in records if r["phase"]==p)+"\n\n"
+            body+="\n".join(f"| {link(items[r['resource']])} | {method[r['method']]} | {cell(r['quantity'])} | {'每主角一次' if r['refresh']=='once-per-protagonist' else '可重复获取' if r['refresh']=='repeatable' else '未确认'} |" for r in records if r["phase"]==p)+"\n\n"
         body+=f"[在阶段地图中查看]({BASE}/maps/world?location={loc}) · [筛选这个地点的资源]({BASE}/resources?location={loc})"
         write(e,body)
     for name,e in items.items():
