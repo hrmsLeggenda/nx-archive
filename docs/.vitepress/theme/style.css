@@ -1,0 +1,13 @@
+:root { --vp-c-brand-1: #087f75; --vp-c-brand-2: #0b9b8e; --vp-c-brand-3: #10a89b; --vp-home-hero-name-color: #087f75; --vp-home-hero-image-background-image: linear-gradient(135deg,#c7f5e9,#d9e9ff); --vp-home-hero-image-filter: blur(64px); }
+.dark { --vp-c-brand-1: #63ded0; --vp-c-brand-2: #40cdbd; }
+.VPHome { background: radial-gradient(ellipse at 80% 0%,rgba(16,168,155,.08),transparent 60%); }
+.archive-controls { display:flex; gap:12px; flex-wrap:wrap; margin:24px 0; }
+.archive-controls input,.archive-controls select { border:1px solid var(--vp-c-divider); padding:10px 14px; border-radius:8px; background:var(--vp-c-bg); color:var(--vp-c-text-1); }
+.archive-controls label { display:flex; gap:8px; align-items:center; }
+.game-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px; }
+.game-card { border:1px solid var(--vp-c-divider); border-radius:14px; padding:24px; background:var(--vp-c-bg-soft); }
+.game-card h3 { margin:10px 0; }
+.game-card .eyebrow { font-size:12px; letter-spacing:.12em; color:var(--vp-c-brand-1); }
+.game-card a { display:inline-block; margin-top:12px; }
+
+.VPHome > section { max-width:1152px; margin:40px auto; padding:0 24px; }

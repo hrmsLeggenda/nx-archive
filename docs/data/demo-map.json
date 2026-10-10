@@ -1,0 +1,38 @@
+{
+  "id": "demo-v1",
+  "title": "探索岛（功能示例）",
+  "markers": [
+    {
+      "id": "camp",
+      "name": "旅人营地",
+      "type": "营地",
+      "x": 28,
+      "y": 62,
+      "description": "虚构的补给点，用于演示点位详情。"
+    },
+    {
+      "id": "chest",
+      "name": "山间宝箱",
+      "type": "宝箱",
+      "x": 60,
+      "y": 30,
+      "description": "示例收集点，可标记完成。"
+    },
+    {
+      "id": "ruins",
+      "name": "旧城遗迹",
+      "type": "遗迹",
+      "x": 75,
+      "y": 70,
+      "description": "示例探索地点。"
+    },
+    {
+      "id": "chest-2",
+      "name": "河岸宝箱",
+      "type": "宝箱",
+      "x": 43,
+      "y": 48,
+      "description": "虚构河岸收集点。"
+    }
+  ]
+}
