@@ -1,10 +1,12 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue'
-import data from '../../../data/demo-map.json'
+import { withBase } from 'vitepress'
+const props = defineProps({ data: { type: Object, required: true } })
+const data = props.data
 import { filterMarkers, parseProgress, clampZoom } from './map-state.mjs'
 const category = ref(''), query = ref(''), hideCompleted = ref(false), completed = ref([]), selected = ref(null)
 const zoom = ref(1), offset = ref({ x: 0, y: 0 }), storageMessage = ref(''), viewport = ref(null)
-const key = 'nx-archive:map:' + data.id
+const key = 'nx-archive:map:' + data.gameId + ':' + data.id
 const categories = [...new Set(data.markers.map(m => m.type))]
 const visible = computed(() => filterMarkers(data.markers, category.value, query.value, hideCompleted.value, completed.value))
 onMounted(() => { try { completed.value = parseProgress(localStorage.getItem(key), data.markers.map(m => m.id)) } catch { storageMessage.value = '浏览器存储不可用，进度仅保留到关闭页面。' } })
@@ -21,14 +23,15 @@ function pan(event) { const directions = { ArrowLeft:[30,0], ArrowRight:[-30,0],
 </script>
 <template>
 <section class="map-app" aria-label="互动地图">
+<p v-if="data.notice" class="map-notice">{{ data.notice }}</p>
 <div class="archive-controls"><label>点位 <input v-model="query" type="search" placeholder="搜索点位" /></label><label>分类 <select v-model="category"><option value="">全部类型</option><option v-for="type in categories" :key="type">{{ type }}</option></select></label><label><input v-model="hideCompleted" type="checkbox" />隐藏已完成</label></div>
 <div class="map-toolbar"><strong>{{ data.title }}</strong><span aria-live="polite">已完成 {{ completed.length }} / {{ data.markers.length }}</span><button @click="setZoom(zoom + .25)" aria-label="放大地图">＋</button><button @click="setZoom(zoom - .25)" aria-label="缩小地图">−</button><button @click="resetView">重置视图</button></div>
 <div class="map-viewport" ref="viewport" tabindex="0" aria-label="可拖动地图，使用方向键平移；点位也可在下方列表选择" @keydown="pan" @pointerdown="start" @pointermove="move" @pointerup="stop" @pointercancel="stop" @lostpointercapture="stop" @wheel.prevent="setZoom(zoom + ($event.deltaY < 0 ? .15 : -.15))">
-<svg viewBox="0 0 100 100" role="img" aria-label="原创虚构岛屿示意图"><g :transform="`translate(${offset.x / (viewport?.clientWidth || 600) * 100} ${offset.y / (viewport?.clientHeight || 500) * 100}) translate(50 50) scale(${zoom}) translate(-50 -50)`">
-<rect x="-500" y="-500" width="1000" height="1000" fill="#c9e6ea"/><path d="M12 45L21 21 43 13 58 22 79 18 91 43 85 73 61 89 37 85 15 67Z" fill="#d8e3ba" stroke="#9bb491" stroke-width=".6"/><path d="M41 17Q70 36 46 50T60 86" fill="none" stroke="#80c5d4" stroke-width="3"/><path d="M23 58L33 39 41 57M55 31L65 17 73 34M68 68L78 54 86 70" fill="#a5b993" stroke="#94a982" stroke-width=".5"/><path d="M28 62Q44 72 75 70M28 62Q37 38 60 30" fill="none" stroke="#eebc73" stroke-width="1" stroke-dasharray="2 1"/>
+<svg viewBox="0 0 100 100" role="img" aria-label="地图或地点索引示意图"><g :transform="`translate(${offset.x / (viewport?.clientWidth || 600) * 100} ${offset.y / (viewport?.clientHeight || 500) * 100}) translate(50 50) scale(${zoom}) translate(-50 -50)`">
+<rect x="-500" y="-500" width="1000" height="1000" fill="#c9e6ea"/><path v-if="data.mode !== 'index'" d="M12 45L21 21 43 13 58 22 79 18 91 43 85 73 61 89 37 85 15 67Z" fill="#d8e3ba" stroke="#9bb491" stroke-width=".6"/><path v-if="data.mode !== 'index'" d="M41 17Q70 36 46 50T60 86" fill="none" stroke="#80c5d4" stroke-width="3"/><path v-if="data.mode !== 'index'" d="M23 58L33 39 41 57M55 31L65 17 73 34M68 68L78 54 86 70" fill="#a5b993" stroke="#94a982" stroke-width=".5"/><path v-if="data.mode !== 'index'" d="M28 62Q44 72 75 70M28 62Q37 38 60 30" fill="none" stroke="#eebc73" stroke-width="1" stroke-dasharray="2 1"/>
 <g v-for="marker in visible" :key="marker.id" data-marker @click="selected = marker"><circle :cx="marker.x" :cy="marker.y" r="2" :fill="completed.includes(marker.id) ? '#6b7280' : '#087f75'" stroke="white" stroke-width=".6"/><text :x="marker.x + 3" :y="marker.y + 1" font-size="2.3" fill="#183a38">{{ marker.name }}</text></g>
 </g></svg></div>
-<div class="map-bottom"><div><h3>点位列表（{{ visible.length }}）</h3><ul class="marker-list"><li v-for="marker in visible" :key="marker.id"><button @click="selected = marker" :aria-pressed="selected?.id === marker.id">{{ completed.includes(marker.id) ? '✓ ' : '○ ' }}{{ marker.name }} · {{ marker.type }}</button></li></ul><p v-if="!visible.length">没有匹配的点位。</p></div><aside aria-live="polite"><template v-if="selected"><h3>{{ selected.name }}</h3><p>{{ selected.type }} · 坐标 {{ selected.x }}, {{ selected.y }}</p><p>{{ selected.description }}</p><button class="primary" @click="toggle(selected.id)">{{ completed.includes(selected.id) ? '取消完成' : '标记完成' }}</button></template><p v-else>选择地图点位或列表项目，查看详情与记录进度。</p></aside></div>
+<div class="map-bottom"><div><h3>点位列表（{{ visible.length }}）</h3><ul class="marker-list"><li v-for="marker in visible" :key="marker.id"><button @click="selected = marker" :aria-pressed="selected?.id === marker.id">{{ completed.includes(marker.id) ? '✓ ' : '○ ' }}{{ marker.name }} · {{ marker.type }}</button></li></ul><p v-if="!visible.length">没有匹配的点位。</p></div><aside aria-live="polite"><template v-if="selected"><h3>{{ selected.name }}</h3><p>{{ selected.type }} · 坐标 {{ selected.x }}, {{ selected.y }}</p><p>{{ selected.description }}</p><p v-if="selected.link"><a :href="withBase(selected.link)">阅读关联攻略 →</a></p><button class="primary" @click="toggle(selected.id)">{{ completed.includes(selected.id) ? '取消完成' : '标记完成' }}</button></template><p v-else>选择地图点位或列表项目，查看详情与记录进度。</p></aside></div>
 <p role="status">{{ storageMessage }}</p><button @click="resetProgress">清空本地图进度</button>
 </section>
 </template>

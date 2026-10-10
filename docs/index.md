@@ -12,15 +12,15 @@ hero:
       text: 浏览游戏档案
       link: /games/
     - theme: alt
-      text: 打开互动地图
-      link: /maps/
+      text: 进入万缕千丝 Wiki
+      link: /games/fire-emblem-fw/
 features:
   - title: 查找，让攻略触手可及
     details: 搜索正文与标题，快速定位攻略条目。支持中文关键词。
   - title: 游戏板块，逐步沉淀
     details: 按平台筛选游戏，每个板块独立维护入门、流程、收集与机制。
-  - title: 地图，记录探索进度
-    details: 缩放与拖动地图，筛选点位并在当前浏览器保存完成状态。
+  - title: 每款游戏，一个独立 Wiki
+    details: 攻略、客制化分类和地图均归属于游戏 Wiki，各自维护目录与进度。
 ---
 
 <GameLibrary />

@@ -9,3 +9,5 @@ Use a feature branch and PR. Read README before editing. Keep sources in this re
 - Map code must support SSR, keyboard access, storage failures, and GitHub Pages base path.
 - Never commit node_modules, generated output, or secrets.
 - CI verifies PRs; Pages deployment runs on main. Keep production publishing on the agreed workflow.
+
+- All guides, maps and custom categories belong to a game Wiki at docs/games/<slug>/. Maintain docs/data/wikis.json. Map progress keys must include gameId and map ID. Never treat an index layout as actual geographic coordinates.

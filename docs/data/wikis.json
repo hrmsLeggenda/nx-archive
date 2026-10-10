@@ -1,0 +1,122 @@
+{
+  "fire-emblem-fw": {
+    "title": "火焰纹章·万缕千丝",
+    "subtitle": "四条路线，一部攻略档案",
+    "groups": [
+      {
+        "id": "training",
+        "title": "入门与养成",
+        "items": [
+          {
+            "title": "新手入门",
+            "path": "guides/getting-started"
+          },
+          {
+            "title": "角色与挖角",
+            "path": "guides/recruitment"
+          },
+          {
+            "title": "职业成长速查",
+            "path": "guides/classes"
+          }
+        ]
+      },
+      {
+        "id": "story",
+        "title": "主线与任务",
+        "items": [
+          {
+            "title": "主线结构与路线选择",
+            "path": "guides/story"
+          },
+          {
+            "title": "战争篇准备清单",
+            "path": "guides/war-preparation"
+          }
+        ]
+      },
+      {
+        "id": "exploration",
+        "title": "探索与地图",
+        "items": [
+          {
+            "title": "世界地图探索",
+            "path": "guides/exploration"
+          },
+          {
+            "title": "世界地点索引",
+            "path": "maps/world"
+          }
+        ]
+      },
+      {
+        "id": "reference",
+        "title": "资料与维护",
+        "items": [
+          {
+            "title": "资料来源与核对记录",
+            "path": "sources"
+          }
+        ]
+      }
+    ]
+  },
+  "zelda-totk": {
+    "title": "塞尔达传说 王国之泪",
+    "subtitle": "筹备中的游戏 Wiki",
+    "groups": [
+      {
+        "id": "overview",
+        "title": "游戏 Wiki",
+        "items": [
+          {
+            "title": "板块首页",
+            "path": ""
+          }
+        ]
+      },
+      {
+        "id": "prototype",
+        "title": "地图组件原型",
+        "items": [
+          {
+            "title": "虚构地图演示",
+            "path": "maps/demo"
+          }
+        ]
+      }
+    ]
+  },
+  "mario-kart-world": {
+    "title": "马力欧卡丁车 世界",
+    "subtitle": "筹备中的游戏 Wiki",
+    "groups": [
+      {
+        "id": "overview",
+        "title": "游戏 Wiki",
+        "items": [
+          {
+            "title": "板块首页",
+            "path": ""
+          }
+        ]
+      }
+    ]
+  },
+  "xenoblade3": {
+    "title": "异度神剑 3",
+    "subtitle": "筹备中的游戏 Wiki",
+    "groups": [
+      {
+        "id": "overview",
+        "title": "游戏 Wiki",
+        "items": [
+          {
+            "title": "板块首页",
+            "path": ""
+          }
+        ]
+      }
+    ]
+  }
+}
