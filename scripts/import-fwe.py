@@ -2,6 +2,7 @@
 """Export factual fields only from a pinned, verified SQLite snapshot."""
 import hashlib, json, re, sqlite3, tempfile, urllib.request
 from pathlib import Path
+from overlay_model import stable_id
 ROOT = Path(__file__).resolve().parents[1]
 LOCK = json.loads((ROOT / "sources/fire-emblem-fw/upstream.json").read_text())
 STATS = ["HP","Str","Mag","Spd","Dex","Def","Res","Lck","Cha"]
@@ -24,20 +25,22 @@ def run():
             if kind is None:
                 return {s: next((r["value"] for r in cg if r["name"] == name and r["stat"] == s), None) for s in STATS}
             return {s: next((r["value"] for r in clg if r["class"] == name and r["stat"] == s and r["kind"] == kind), None) for s in STATS}
-        names = {"Cai":"凯伊","Dietrich":"迪托利希","Theodora":"塞奥朵拉","Leda":"蕾达"}
+        names = {} # Display names are maintained in persistent corrections.
         chars = []
         for r in rows("characters"):
-            chars.append({"name":r["name"],"nameZh":names.get(r["name"]), "faction":r["faction"],"growths":growth(r["name"]),"source":pages.get(r["page_id"]), "ability":r["ability"] if r["ability"] != "TBD" else None})
+            chars.append({"name":r["name"],"nameZh":names.get(r["name"]), "aliases":[], "faction":r["faction"],"growths":growth(r["name"]),"source":pages.get(r["page_id"]), "ability":r["ability"] if r["ability"] != "TBD" else None})
         classes = []
         fields = ["name","tier","type","movement","weapons","license","ideal_lv","renown_lv","primary_skill","secondary_skill","master_ability","class_ability"]
         for r in rows("classes"):
-            classes.append({**{k:r[k] or None for k in fields}, "growths":growth(r["name"],"growth"),"statBonus":growth(r["name"],"bonus"),"source":pages.get(r["page_id"])})
+            classes.append({**{k:r[k] or None for k in fields}, "nameZh":None, "aliases":[], "growths":growth(r["name"],"growth"),"statBonus":growth(r["name"],"bonus"),"source":pages.get(r["page_id"])})
         # Names and learning conditions only. No scraped descriptive prose.
         spells = [{k:r[k] for k in ["name","skill_level","magic","spell"]} for r in rows("char_spells")]
         marks = [{k:r[k] for k in ["name","mark","holders"]} for r in rows("char_bloodmarks")]
         arts = [{k:r[k] for k in ["name","art","range","blaze","learned"]} for r in rows("char_blaze")]
         prefs = rows("char_skill_prefs")
         con.close()
+    for kind,records in [("characters",chars),("classes",classes)]:
+        for record in records: record["id"]=stable_id(kind,record["name"],record["source"])
     assert len(chars) == 62 and len(classes) == 58
     for r in chars + classes:
         assert set(r["growths"]) == set(STATS)
@@ -54,7 +57,10 @@ def run():
             "crosscheck":{"source":checks["source"],"scope":list(checks["characters"]),"discrepancies":discrepancies}}
     target = ROOT / "docs/games/fire-emblem-fw/data/generated"
     target.mkdir(parents=True, exist_ok=True)
-    (target / "database.json").write_text(json.dumps(data,ensure_ascii=False,indent=2) + "\n")
+    (target / "baseline-database.json").write_text(json.dumps(data,ensure_ascii=False,indent=2) + "\n")
+    print(json.dumps({"identityMap":{r["name"]:r["id"] for r in chars if r["name"] in ["Cai","Dietrich","Theodora","Leda"]}},ensure_ascii=False))
+    print(json.dumps({"characters":len(chars),"classes":len(classes),"spells":len(spells),"bloodmarks":len(marks),"arts":len(arts),"crosscheck":data["crosscheck"]},ensure_ascii=False))
+def write_tables(data,target):
     labels = ["生命","力量","魔力","速度","技巧","防御","魔防","幸运","魅力"]
     for kind in ["characters","classes"]:
         title = "人物成长率总表" if kind == "characters" else "职业成长加成总表"
@@ -72,5 +78,4 @@ def run():
             lines.append("| " + name + " | " + " | ".join(values) + f" | [来源]({r['source']}) |")
         lines += ["",f"固定上游版本：`{LOCK['commit']}`。", "", "[返回数据库](../../database)"]
         (target / f"{kind}.md").write_text("\n".join(lines)+"\n")
-    print(json.dumps({"characters":len(chars),"classes":len(classes),"spells":len(spells),"bloodmarks":len(marks),"arts":len(arts),"crosscheck":data["crosscheck"]},ensure_ascii=False))
 if __name__ == "__main__": run()

@@ -8,7 +8,7 @@
     "build": "npm run data:import && vitepress build docs",
     "preview": "vitepress preview docs",
     "test": "node --test tests/*.test.mjs",
-    "data:import": "python3 scripts/import-fwe.py && python3 scripts/build-fwe-entries.py"
+    "data:import": "python3 scripts/import-fwe.py && python3 scripts/apply-fwe-overrides.py && python3 scripts/build-fwe-entries.py"
   },
   "devDependencies": {
     "minisearch": "7.1.2",

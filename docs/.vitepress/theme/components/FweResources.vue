@@ -1,7 +1,7 @@
 <script setup>
 import { computed, ref, onMounted } from 'vue'
-import resources from '../../../games/fire-emblem-fw/data/resources.json'
-import timeline from '../../../games/fire-emblem-fw/data/timeline.json'
+import resources from '../../../games/fire-emblem-fw/data/generated/resources.json'
+import timeline from '../../../games/fire-emblem-fw/data/generated/timeline.json'
 import {withBase} from 'vitepress'
 import graph from '../../../games/fire-emblem-fw/data/generated/entities.json'
 import {entityForName} from './entity-model.mjs'

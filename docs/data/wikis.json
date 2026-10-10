@@ -68,6 +68,10 @@
           {
             "title": "资料来源与核对记录",
             "path": "sources"
+          },
+          {
+            "title": "结构化数据编辑与勘误",
+            "path": "data-editor"
           }
         ]
       },

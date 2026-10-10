@@ -10,9 +10,10 @@ import CategoryBrowser from './components/CategoryBrowser.vue'
 import SiteUpdates from './components/SiteUpdates.vue'
 import EntryRelations from './components/EntryRelations.vue'
 import WikiEditor from './components/WikiEditor.vue'
+import StructuredEditor from './components/StructuredEditor.vue'
 import './style.css'
 export default {
  extends: DefaultTheme,
  Layout: () => h(DefaultTheme.Layout, null, { 'doc-before': () => h(GameContext) }),
- enhanceApp({ app }) { app.component('GameLibrary', GameLibrary); app.component('InteractiveMap', InteractiveMap); app.component('WikiPortal', WikiPortal); app.component('FweDatabase', FweDatabase); app.component('FweResources', FweResources); app.component('CategoryBrowser', CategoryBrowser); app.component('SiteUpdates', SiteUpdates); app.component('EntryRelations', EntryRelations); app.component('WikiEditor', WikiEditor) }
+ enhanceApp({ app }) { app.component('GameLibrary', GameLibrary); app.component('InteractiveMap', InteractiveMap); app.component('WikiPortal', WikiPortal); app.component('FweDatabase', FweDatabase); app.component('FweResources', FweResources); app.component('CategoryBrowser', CategoryBrowser); app.component('SiteUpdates', SiteUpdates); app.component('EntryRelations', EntryRelations); app.component('WikiEditor', WikiEditor); app.component('StructuredEditor', StructuredEditor) }
 }
