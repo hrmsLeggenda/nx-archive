@@ -1,0 +1,299 @@
+[
+  {
+    "id": "smithing",
+    "gameId": "fire-emblem-fw",
+    "phase": "part1",
+    "routes": [
+      "Cai",
+      "Dietrich",
+      "Theodora",
+      "Leda"
+    ],
+    "chapter": 4,
+    "title": "寻找锻造石（暂译）",
+    "rewards": [
+      "500G",
+      "30R"
+    ],
+    "deadline": "5/7",
+    "deadlineNote": "来源日期，可能随主角变化；以游戏任务栏为准",
+    "source": "https://www.rpgsite.net/guide/21392-fire-emblem-fortunes-weave-part-1-subquest-guide-how-subquests-work-where-to-find",
+    "kind": "subquest",
+    "certainty": "conditional",
+    "condition": "公告板可能出现；提交3块锻造石；出现受周目与路线顺序影响",
+    "checked": "2026-10-10",
+    "gameVersion": null
+  },
+  {
+    "id": "granada",
+    "gameId": "fire-emblem-fw",
+    "phase": "part1",
+    "routes": [
+      "Cai",
+      "Dietrich",
+      "Theodora",
+      "Leda"
+    ],
+    "chapter": 4,
+    "title": "格拉纳达盗贼（暂译）",
+    "rewards": [
+      "Baal Plate ×3",
+      "600G",
+      "30R"
+    ],
+    "deadline": "5/7",
+    "deadlineNote": "来源日期，可能随主角变化；以游戏任务栏为准",
+    "source": "https://www.rpgsite.net/guide/21392-fire-emblem-fortunes-weave-part-1-subquest-guide-how-subquests-work-where-to-find",
+    "kind": "subquest",
+    "certainty": "conditional",
+    "condition": "可能出现；在 Granada Fort Ruins 击败目标盗贼",
+    "checked": "2026-10-10",
+    "gameVersion": null
+  },
+  {
+    "id": "sacrifices",
+    "gameId": "fire-emblem-fw",
+    "phase": "part1",
+    "routes": [
+      "Cai",
+      "Dietrich",
+      "Theodora",
+      "Leda"
+    ],
+    "chapter": 5,
+    "title": "邪恶献祭（暂译）",
+    "rewards": [
+      "Black Magic Manual",
+      "1000G",
+      "50R"
+    ],
+    "deadline": "6/28",
+    "deadlineNote": "来源日期，可能随主角变化；以游戏任务栏为准",
+    "source": "https://www.rpgsite.net/guide/21392-fire-emblem-fortunes-weave-part-1-subquest-guide-how-subquests-work-where-to-find",
+    "kind": "subquest",
+    "certainty": "conditional",
+    "condition": "可能出现；在 Sunset Fortress 击败任务目标",
+    "checked": "2026-10-10",
+    "gameVersion": null
+  },
+  {
+    "id": "nostalgia",
+    "gameId": "fire-emblem-fw",
+    "phase": "part1",
+    "routes": [
+      "Cai",
+      "Dietrich",
+      "Theodora",
+      "Leda"
+    ],
+    "chapter": 6,
+    "title": "怀念的味道（暂译）",
+    "rewards": [
+      "Sunstone ×2",
+      "3000G",
+      "80R"
+    ],
+    "deadline": "6/15",
+    "deadlineNote": "来源日期，可能随主角变化；以游戏任务栏为准",
+    "source": "https://www.rpgsite.net/guide/21392-fire-emblem-fortunes-weave-part-1-subquest-guide-how-subquests-work-where-to-find",
+    "kind": "subquest",
+    "certainty": "conditional",
+    "condition": "可能出现；交付 Sandworm Meat",
+    "checked": "2026-10-10",
+    "gameVersion": null
+  },
+  {
+    "id": "night-monster",
+    "gameId": "fire-emblem-fw",
+    "phase": "part1",
+    "routes": [
+      "Leda"
+    ],
+    "chapter": 5,
+    "title": "夜间怪物（暂译）",
+    "rewards": [
+      "1500G",
+      "100R"
+    ],
+    "deadline": "5/7",
+    "deadlineNote": "来源日期，可能随主角变化；以游戏任务栏为准",
+    "source": "https://www.rpgsite.net/guide/21392-fire-emblem-fortunes-weave-part-1-subquest-guide-how-subquests-work-where-to-find",
+    "kind": "subquest",
+    "certainty": "conditional",
+    "condition": "蕾达限定；Dagsion 东侧小巷晚间18:00后事件战",
+    "checked": "2026-10-10",
+    "gameVersion": null
+  },
+  {
+    "id": "dietrich-blessing",
+    "gameId": "fire-emblem-fw",
+    "phase": "part1",
+    "routes": [
+      "Dietrich"
+    ],
+    "chapter": 2,
+    "title": "第二章：时间回溯开放",
+    "rewards": [],
+    "deadline": null,
+    "deadlineNote": null,
+    "source": "https://www.rpgsite.net/guide/21212-fire-emblem-fortunes-weave-part-i-dietrichs-path-walkthrough",
+    "kind": "unlock",
+    "certainty": "fixed",
+    "condition": "战斗第2回合",
+    "checked": "2026-10-10",
+    "gameVersion": null
+  },
+  {
+    "id": "dietrich-dungeon",
+    "gameId": "fire-emblem-fw",
+    "phase": "part1",
+    "routes": [
+      "Dietrich"
+    ],
+    "chapter": 3,
+    "title": "第三章：异教徒洞窟教程",
+    "rewards": [
+      "Dew of Protection",
+      "Vulnerary"
+    ],
+    "deadline": null,
+    "deadlineNote": null,
+    "source": "https://www.rpgsite.net/guide/21212-fire-emblem-fortunes-weave-part-i-dietrichs-path-walkthrough",
+    "kind": "dungeon",
+    "certainty": "fixed",
+    "condition": "推进主线；宝箱固定，破坏物采集随机",
+    "checked": "2026-10-10",
+    "gameVersion": null
+  },
+  {
+    "id": "cai-blaze",
+    "gameId": "fire-emblem-fw",
+    "phase": "part1",
+    "routes": [
+      "Cai"
+    ],
+    "chapter": 1,
+    "title": "第一章：主角战技与回溯",
+    "rewards": [
+      "Underworld Burst"
+    ],
+    "deadline": null,
+    "deadlineNote": null,
+    "source": "https://www.rpgsite.net/guide/21213-fire-emblem-fortunes-weave-part-i-cais-path-walkthrough",
+    "kind": "unlock",
+    "certainty": "fixed",
+    "condition": "战斗中习得；第2回合开放回溯",
+    "checked": "2026-10-10",
+    "gameVersion": null
+  },
+  {
+    "id": "cai-dungeon",
+    "gameId": "fire-emblem-fw",
+    "phase": "part1",
+    "routes": [
+      "Cai"
+    ],
+    "chapter": 2,
+    "title": "第二章：加伦堡遗迹教程",
+    "rewards": [
+      "Hunter's Bow",
+      "Vulnerary"
+    ],
+    "deadline": null,
+    "deadlineNote": null,
+    "source": "https://www.rpgsite.net/guide/21213-fire-emblem-fortunes-weave-part-i-cais-path-walkthrough",
+    "kind": "dungeon",
+    "certainty": "conditional",
+    "condition": "选择追击进入；本次略过可在自由行动返回",
+    "checked": "2026-10-10",
+    "gameVersion": null
+  },
+  {
+    "id": "theodora-arm",
+    "gameId": "fire-emblem-fw",
+    "phase": "part1",
+    "routes": [
+      "Theodora"
+    ],
+    "chapter": 1,
+    "title": "第一章：主线武器获得",
+    "rewards": [
+      "Mahadu's right arm",
+      "Mahadu's Spear"
+    ],
+    "deadline": null,
+    "deadlineNote": null,
+    "source": "https://www.rpgsite.net/guide/21211-fire-emblem-fortunes-weave-part-i-theodoras-path-walkthrough",
+    "kind": "reward",
+    "certainty": "fixed",
+    "condition": "抵达目标并播放事件",
+    "checked": "2026-10-10",
+    "gameVersion": null
+  },
+  {
+    "id": "theodora-battalion",
+    "gameId": "fire-emblem-fw",
+    "phase": "part1",
+    "routes": [
+      "Theodora"
+    ],
+    "chapter": 4,
+    "title": "第四章：转职与骑士团教程",
+    "rewards": [
+      "Novice Hunters"
+    ],
+    "deadline": null,
+    "deadlineNote": null,
+    "source": "https://www.rpgsite.net/guide/21211-fire-emblem-fortunes-weave-part-i-theodoras-path-walkthrough",
+    "kind": "unlock",
+    "certainty": "fixed",
+    "condition": "转职教程后开启骑士团；骑士团可采集地图资源",
+    "checked": "2026-10-10",
+    "gameVersion": null
+  },
+  {
+    "id": "leda-dungeon",
+    "gameId": "fire-emblem-fw",
+    "phase": "part1",
+    "routes": [
+      "Leda"
+    ],
+    "chapter": 2,
+    "title": "第二章：科里斯矿山宝箱",
+    "rewards": [
+      "Vulnerary",
+      "Archer's Ring",
+      "Large Coin"
+    ],
+    "deadline": null,
+    "deadlineNote": null,
+    "source": "https://www.rpgsite.net/guide/21210-fire-emblem-fortunes-weave-part-i-ledas-path-walkthrough",
+    "kind": "dungeon",
+    "certainty": "fixed",
+    "condition": "推进教程；采集物属于随机池",
+    "checked": "2026-10-10",
+    "gameVersion": null
+  },
+  {
+    "id": "leda-performance",
+    "gameId": "fire-emblem-fw",
+    "phase": "part1",
+    "routes": [
+      "Leda"
+    ],
+    "chapter": 4,
+    "title": "第四章：酒馆演出",
+    "rewards": [
+      "Song of Icewater",
+      "200R"
+    ],
+    "deadline": "11/27",
+    "deadlineNote": "来源日期，可能随主角变化；以游戏任务栏为准",
+    "source": "https://www.rpgsite.net/guide/21210-fire-emblem-fortunes-weave-part-i-ledas-path-walkthrough",
+    "kind": "route-quest",
+    "certainty": "conditional",
+    "condition": "与酒馆老板交谈；专属演出任务",
+    "checked": "2026-10-10",
+    "gameVersion": null
+  }
+]

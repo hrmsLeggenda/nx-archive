@@ -1,15 +1,11 @@
 ---
-title: 世界地点索引
-category: 探索与地图
+title: 阶段资源地点索引
+category: 探索与资源
 ---
-<script setup>
-import mapData from '../data/world-index.json'
-</script>
+# 阶段资源地点索引
 
-# 世界地点索引
+平台：Switch 2；补丁版本未确认。选择阶段和路线，再查看地牢及其资源。4 个地点仅作索引布局，尚无授权底图、真实坐标、通行关系或完整探索点。完成进度按游戏、阶段和路线分别保存。
 
-**赛奥朵拉篇 · 非地理地图**：目前只有三处真实地点记录，坐标为索引布局，不是游戏内位置。正式底图、道路与精确坐标尚未录入。
+<FweResources mode="map" />
 
-<InteractiveMap :data="mapData" />
-
-参考：[世界地图探索](https://cn.fire-emblem-fw.site/map.html)。核对日期：2026-10-10；适用补丁未确认，尚未游戏内复核。
+[返回资源检索](../resources)

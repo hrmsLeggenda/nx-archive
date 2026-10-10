@@ -1,57 +1,38 @@
 # NX Archive
 
-Switch / Switch 2 中文攻略 Wiki，以 VitePress 1.6.4（MIT）和 Vue 构建。
-使用上游发布的框架依赖，不复制框架仓库；lockfile 固定实际依赖。
-上游：https://github.com/vuejs/vitepress
+Switch / Switch 2 中文攻略 Wiki，使用 VitePress 1.6.4（MIT）和 Vue。源码、来源锁定和内容均在仓库持久化；测试、构建和部署通过 GitHub Actions。
 
-## 已实现
+## 游戏 Wiki
 
-- Markdown 攻略、游戏目录、平台筛选、游戏关键词检索。
-- VitePress 本地全文检索、暗色模式、移动端布局与 GitHub 编辑入口。
-- 按游戏归属的地图组件：拖动、缩放、分类与文字筛选、详情、浏览器本地进度。
-- PR 测试与构建；main 合并后 GitHub Pages 发布流水线。
+游戏目录 → 独立游戏 Wiki → 攻略、客制化分类、数据库、互动地图。导航维护于 `docs/data/wikis.json`。游戏全文检索与全站检索均可使用。
 
-游戏目录页为待编写的板块，示例地图不是实际游戏地图。当前没有账号、在线直接编辑、评论或跨设备同步；内容通过 PR 审核维护。
+《火焰纹章·万缕千丝》新增固定 SQLite 快照导入、62 人物与58职业成长表、技能与法术条件检索、成长期望模拟器、阶段资源查询、章节时间轴和阶段地图索引。
 
-## 可重建环境
+首批资源54条（4地牢、2阶段），时间轴13条；不是全地图或逐章完整数据库。坐标尚未取得，不将索引布局标作实际地图。
 
-Node 22 或以上：
+## 云端验证与部署
+
+PR 与 `work/**` 分支自动验证。Actions 使用 Node 22、Python 3，运行 `npm ci`、`npm test`、`npm run build`；CI 额外用 Chromium 验证筛选、阶段资源、地图进度隔离及移动端页面。预览产物与页面截图保存在 Actions artifacts。
+
+合并 main 后，既有 GitHub Pages 工作流发布到 https://hrmsLeggenda.github.io/nx-archive/ 。Pages Source 设为 GitHub Actions，无部署密钥。
+
+## 数据导入
+
+`scripts/import-fwe.py` 下载 `sources/fire-emblem-fw/upstream.json` 指定提交的 SQLite，验证 Git blob 校验值；仅导出数值和短条件，不导出抓取正文、图片或全文索引。构建时生成数据库 JSON 和供检索的 Markdown 总表，不提交产物。上游未检测到仓库许可证，来源锁定不代表转载许可。
+
+`sources/fire-emblem-fw/crosscheck.json` 为4主角和Mu的Serenes Forest核对记录；差异在页面显示。缺失成长率保留null，不取默认零值。
+
+资源与时间轴在游戏子 Wiki 的 `data/resources.json` 和 `data/timeline.json`；固定、随机池、条件事件分开存储，来源、核对日期、未知刷新和坐标均保留。新增数据需核对事实和来源。
+
+## 可重建命令
 
 ```sh
 npm ci
 npm test
 npm run build
-npm run dev
+npm run preview
 ```
 
-产物目录：`docs/.vitepress/dist`。预览：`npm run preview`。
+构建需要下载固定上游快照。Node22+、Python3。产物为 `docs/.vitepress/dist`。直接开发前先运行 `npm run data:import`。
 
-## GitHub Actions / Pages
-
-1. PR 自动运行 CI，执行测试和完整构建，保存静态产物供审阅。
-2. 仓库 Settings → Pages → Build and deployment → Source 选择 **GitHub Actions**。
-3. 合并 main 后运行部署，也可在 main 使用 workflow_dispatch。
-4. 默认目标：https://hrmsLeggenda.github.io/nx-archive/ （首次部署成功后才能访问）。
-
-后续自定义域名或其他部署目标需修改 `docs/.vitepress/config.mts` 的 base。
-无需部署密钥；流水线使用 GitHub 的 GITHUB_TOKEN / OIDC。
-
-## 目录
-
-- docs/data/games.json：游戏目录。
-- docs/games/：每款游戏的 Markdown 板块。
-- docs/games/<slug>/data/*.json：示例点位。
-- docs/.vitepress/theme/components/：游戏筛选与互动地图组件。
-- tests/：地图过滤、存储解析及数据一致性验证。
-
-## 下一步
-
-选定首个游戏，编写真实攻略；取得地图授权后替换底图和点位；按规模扩展多层地图、点位深链接和收集数据导入导出。在线协作编辑与账号同步需要新增后端。
-
-本站并非 Nintendo 官方网站。商标和游戏素材版权归各自权利人所有。
-
-## 游戏 Wiki 层级（当前）
-
-游戏目录 → `docs/games/<slug>/index.md` 独立 Wiki → `guides/` 攻略、`maps/` 地图、`data/` 游戏数据。每个 Wiki 的客制化分类与导航由 `docs/data/wikis.json` 维护，站内显示对应游戏的上下文导航与侧栏。Wiki 首页的搜索限定为该游戏，顶部检索为全站。
-
-首个真实板块：`fire-emblem-fw`。资料注明来源、核对日期与未实机复核状态；地图目前是三处真实地点的索引示意，不含真实地理坐标。旧 `/maps/` 仅保留迁移提示，不再是全站地图栏目。
+本站非 Nintendo 官方网站。无账户、评论或跨设备进度同步；进度保存在浏览器，内容通过 PR 维护。

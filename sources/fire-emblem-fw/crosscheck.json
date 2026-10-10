@@ -1,0 +1,61 @@
+{
+  "source": "https://serenesforest.net/fortunes-weave/characters/growth-rates/",
+  "checked": "2026-10-10",
+  "characters": {
+    "Cai": {
+      "HP": 45,
+      "Str": 45,
+      "Mag": 40,
+      "Spd": 45,
+      "Dex": 45,
+      "Def": 35,
+      "Res": 35,
+      "Lck": 40,
+      "Cha": 40
+    },
+    "Dietrich": {
+      "HP": 50,
+      "Str": 45,
+      "Mag": 30,
+      "Spd": 50,
+      "Dex": 60,
+      "Def": 40,
+      "Res": 30,
+      "Lck": 50,
+      "Cha": 60
+    },
+    "Theodora": {
+      "HP": 70,
+      "Str": 50,
+      "Mag": 30,
+      "Spd": 40,
+      "Dex": 40,
+      "Def": 40,
+      "Res": 30,
+      "Lck": 30,
+      "Cha": 50
+    },
+    "Leda": {
+      "HP": 40,
+      "Str": 35,
+      "Mag": 35,
+      "Spd": 65,
+      "Dex": 50,
+      "Def": 30,
+      "Res": 35,
+      "Lck": 25,
+      "Cha": 55
+    },
+    "Mu": {
+      "HP": 30,
+      "Str": 30,
+      "Mag": 5,
+      "Spd": 30,
+      "Dex": 30,
+      "Def": 20,
+      "Res": 10,
+      "Lck": 10,
+      "Cha": 20
+    }
+  }
+}

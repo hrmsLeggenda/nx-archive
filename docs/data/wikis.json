@@ -1,7 +1,7 @@
 {
   "fire-emblem-fw": {
     "title": "火焰纹章·万缕千丝",
-    "subtitle": "四条路线，一部攻略档案",
+    "subtitle": "人物职业数据 · 阶段资源 · 章节时间轴",
     "groups": [
       {
         "id": "training",
@@ -18,6 +18,10 @@
           {
             "title": "职业成长速查",
             "path": "guides/classes"
+          },
+          {
+            "title": "数据库与成长模拟器",
+            "path": "database"
           }
         ]
       },
@@ -32,6 +36,10 @@
           {
             "title": "战争篇准备清单",
             "path": "guides/war-preparation"
+          },
+          {
+            "title": "章节与资源时间轴",
+            "path": "timeline"
           }
         ]
       },
@@ -44,8 +52,12 @@
             "path": "guides/exploration"
           },
           {
-            "title": "世界地点索引",
+            "title": "阶段资源地点索引",
             "path": "maps/world"
+          },
+          {
+            "title": "阶段资源检索",
+            "path": "resources"
           }
         ]
       },
