@@ -38,7 +38,7 @@ export function writeFields(raw,fields){
   else if(!skipping && line.trim())kept.push(line)
  }
  const fm=[...kept,...Object.entries(fields).map(([k,v])=>k+': '+JSON.stringify(v))]
- const text=body.replace(/^# .+$/m,'# '+fields.title)
+ const text=body.replace(/^# [^\r\n]*$/m,'# '+fields.title)
  return '---\n'+fm.join('\n')+'\n---\n\n'+(text.match(/^# /m)?text:'# '+fields.title+'\n\n'+text).trim()+'\n'
 }
 export function sourcePath(game,path){return 'docs/games/'+game+'/'+path+'.md'}

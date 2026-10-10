@@ -10,6 +10,7 @@ test('editor synchronizes metadata without deleting custom fields',()=>{
  assert.match(doc,/custom: preserve/);assert.match(doc,/# 新标题/)
  assert.deepEqual(readFields(doc).categories,['reference'])
  assert.deepEqual(readFields(raw).aliases,['维护测试'])
+ assert.match(writeFields(writeFields('## 正文',{title:''}),{title:'后来填写'}),/# 后来填写/)
  assert.equal(readFields('---\ntitle: 123\nsources: [1]\n---\n# 标题').title,'标题')
 })
 test('editor validates scope, existing names, metadata and summaries',()=>{
