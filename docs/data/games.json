@@ -1,5 +1,13 @@
 [
   {
+    "id": "fire-emblem-fw",
+    "title": "火焰纹章·万缕千丝",
+    "platform": "Switch 2",
+    "category": "策略 / 角色扮演",
+    "description": "四主角路线、职业成长、挖角与世界探索的独立 Wiki。",
+    "status": "首批攻略已开放"
+  },
+  {
     "id": "zelda-totk",
     "title": "塞尔达传说 王国之泪",
     "platform": "Switch",

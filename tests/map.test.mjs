@@ -2,7 +2,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { readFileSync, existsSync } from 'node:fs'
 import { filterMarkers, parseProgress, clampZoom } from '../docs/.vitepress/theme/components/map-state.mjs'
-const map = JSON.parse(readFileSync(new URL('../docs/data/demo-map.json', import.meta.url)))
+const map = JSON.parse(readFileSync(new URL('../docs/games/zelda-totk/data/demo-map.json', import.meta.url)))
 test('category, query and completion filters compose', () => {
  assert.deepEqual(filterMarkers(map.markers, '宝箱', '宝箱', true, ['chest']).map(m=>m.id), ['chest-2'])
  assert.equal(filterMarkers(map.markers, '', '不存在', false, []).length, 0)
