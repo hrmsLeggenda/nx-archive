@@ -1,13 +1,6 @@
-# 马力欧卡丁车 世界
-
-> 初始化板块 · 尚无正式攻略，请勿将本页作为已验证资料。
-
-## 攻略目录
-
-| 栏目 | 状态 |
-| --- | --- |
-| 入门与基础机制 | 待编写 |
-| 主线与任务 | 待编写 |
-| 收集与完成度 | 待编写 |
-
-[查看攻略撰写模板](/guide-template) · [返回游戏档案](/games/)
+---
+title: 马力欧卡丁车 世界 Wiki
+sidebar: false
+aside: false
+---
+<WikiPortal game="mario-kart-world" />
