@@ -25,6 +25,7 @@ jobs:
       - run: node tests/fwe-browser.mjs
       - run: node tests/wiki-shell-browser.mjs
       - run: node tests/wiki-entries-browser.mjs
+      - run: node tests/wiki-editor-browser.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -33,6 +34,7 @@ jobs:
             fwe-mobile.png
             wiki-shell-mobile.png
             wiki-entries-mobile.png
+            wiki-editor-mobile.png
       - uses: actions/upload-artifact@v4
         with:
           name: wiki-preview

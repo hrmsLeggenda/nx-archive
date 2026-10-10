@@ -9,11 +9,17 @@ const groupNode=(game,wiki,group)=>({text:group.title,collapsed:true,items:[
 const sidebar=Object.fromEntries(Object.entries(wikis).map(([id,wiki])=>['/games/'+id+'/',[
  {text:wiki.title,link:'/games/'+id+'/'},
  {text:'全部页面',link:'/games/'+id+'/all-pages'},
+ {text:'创建页面',link:'/games/'+id+'/edit'},
  ...wiki.groups.filter(g=>!g.parent).map(g=>groupNode(id,wiki,g))
 ]]))
 export default defineConfig({
   lang: 'zh-CN', title: 'NX Archive', description: 'Switch / Switch 2 游戏攻略与地图档案',
   base: '/nx-archive/', lastUpdated: true,
+  transformHead({head}) {
+    // VitePress 1.6.4's appearance bootstrap reads localStorage without a guard.
+    const script=head.find(([tag,attrs])=>tag==='script' && attrs?.id==='check-dark-mode')
+    if(script) script[2]='try {'+script[2]+'} catch { if(window.matchMedia("(prefers-color-scheme: dark)").matches) document.documentElement.classList.add("dark") }'
+  },
   themeConfig: {
     logo: '/logo.svg', siteTitle: 'NX Archive',
     nav: [{ text: '游戏档案', link: '/games/' }, { text: '贡献指南', link: '/contribute' }],

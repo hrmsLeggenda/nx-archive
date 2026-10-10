@@ -12,7 +12,8 @@ export default createContentLoader('games/**/*.md', {
   return {url:page.url, game, title:page.frontmatter.title || page.src?.match(/^# (.+)$/m)?.[1] || wikis[game]?.title || 'Wiki 首页',
    categories:pageCategories(page.url,page.frontmatter,wikis), category:page.frontmatter.category || '概览',
    kind:page.frontmatter.kind || (page.url.includes('/guides/')?'攻略':page.url.includes('/maps/')?'地图':/database|resources/.test(page.url)?'工具':'页面'),
-   aliases:page.frontmatter.aliases || [], updated, generated:Boolean(page.frontmatter.generated || page.url.includes('/data/generated/')),
+   aliases:page.frontmatter.aliases || [], entityId:page.frontmatter.entityId || null,
+   metadata:{platform:page.frontmatter.platform,version:page.frontmatter.version,spoiler:page.frontmatter.spoiler,verified:page.frontmatter.verified,sources:page.frontmatter.sources || []}, updated, generated:Boolean(page.frontmatter.generated || page.url.includes('/data/generated/')),
    text:(page.src || '').replace(/<script[\s\S]*?<\/script>/g,'').replace(/<[^>]+>/g,'')}
  }) }
 })
