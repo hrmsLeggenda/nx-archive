@@ -31,6 +31,7 @@ jobs:
       - run: node tests/wiki-entries-browser.mjs
       - run: node tests/wiki-editor-browser.mjs
       - run: node tests/structured-browser.mjs
+      - run: node tests/spaces-browser.mjs
       - name: Build collaboration interface for mocked integration checks
         run: npm run build
         env:
@@ -50,6 +51,7 @@ jobs:
             wiki-entries-mobile.png
             wiki-editor-mobile.png
             structured-mobile.png
+            spaces-mobile.png
       - uses: actions/upload-artifact@v4
         with:
           name: wiki-preview

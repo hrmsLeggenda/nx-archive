@@ -1,6 +1,7 @@
+import {validateSpace} from './space-model.mjs'
 const repo='hrmsLeggenda/nx-archive',api='https://api.github.com/repos/'+repo
 const json=(value,status=200)=>new Response(JSON.stringify(value),{status,headers:{'Content-Type':'application/json','Cache-Control':'no-store'}})
-export function allowedPath(path){return typeof path==='string'&&/^docs\/games\/[a-z0-9-]+\/(guides|notes|maps)\/[a-z0-9][a-z0-9/-]*\.md$/.test(path)&&!path.includes('..')||typeof path==='string'&&/^docs\/games\/fire-emblem-fw\/data\/overrides\/[a-z]+\/[a-z0-9-]+\.json$/.test(path)}
+export function allowedPath(path){if(typeof path==='string'&&/^docs\/games\/[a-z0-9][a-z0-9-]{0,63}\/space\.json$/.test(path))return true;return typeof path==='string'&&/^docs\/games\/[a-z0-9-]+\/(guides|notes|maps)\/[a-z0-9][a-z0-9/-]*\.md$/.test(path)&&!path.includes('..')||typeof path==='string'&&/^docs\/games\/fire-emblem-fw\/data\/overrides\/[a-z]+\/[a-z0-9-]+\.json$/.test(path)}
 export function validateSubmission(b){if(!allowedPath(b.path)||typeof b.content!=='string'||b.content.length>200000||!b.content.trim()||typeof b.summary!=='string'||!b.summary.trim()||b.summary.length>200||!(b.baseSha===null||/^[a-f0-9]{40}$/.test(b.baseSha)))throw Object.assign(new Error('路径、正文、摘要或版本无效。'),{status:400})}
 const key=()=>crypto.randomUUID()+crypto.randomUUID()
 async function gh(token,path,method='GET',body){const r=await fetch(path.startsWith('https:')?path:api+path,{method,headers:{Authorization:'Bearer '+token,Accept:'application/vnd.github+json','User-Agent':'NX-Archive','X-GitHub-Api-Version':'2022-11-28'},body:body===undefined?undefined:JSON.stringify(body)});if(r.status===404)return null;if(!r.ok)throw Object.assign(new Error('GitHub 请求失败，请稍后重试。'),{status:r.status===401||r.status===403?403:502});return r.status===204?{}:r.json()}
@@ -28,7 +29,7 @@ async function route(request,env){
  if(p==='/session'&&request.method==='GET')return json({login:s.login,expires:s.expires})
  if(p==='/logout'&&request.method==='POST'){await env.COLLAB.delete('session:'+s.id);return json({ok:true})}
  if(p==='/submit'&&request.method==='POST'){
-  const raw=await request.text();if(raw.length>250000)return json({error:'请求过大。'},413);const b=JSON.parse(raw);validateSubmission(b)
+  const raw=await request.text();if(raw.length>250000)return json({error:'请求过大。'},413);const b=JSON.parse(raw);validateSubmission(b);if(b.path.endsWith('/space.json')){let value;try{value=JSON.parse(b.content)}catch{return json({error:'空间数据格式无效。'},400)}if(validateSpace(value).length||b.path!=='docs/games/'+value.id+'/space.json')return json({error:'空间配置无效。'},400)}
   const permission=await gh(s.token,'/collaborators/'+encodeURIComponent(s.login)+'/permission');if(!['admin','maintain','write'].includes(permission?.permission))return json({error:'仓库写入权限已撤销。'},403)
   const head=await gh(s.token,'/git/ref/heads/main'),sha=head.object.sha,current=await gh(s.token,'/contents/'+b.path+'?ref='+sha)
   if((current?.sha??null)!==b.baseSha)return json({error:'主线已更新，请合并最新内容后重试。',currentSha:current?.sha??null,content:current?.content??null},409)

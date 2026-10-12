@@ -5,3 +5,6 @@ docs/.vitepress/dist/
 !.env.example
 docs/games/fire-emblem-fw/data/generated/
 docs/games/fire-emblem-fw/entries/
+
+docs/.vitepress/.temp/
+**/__pycache__/
