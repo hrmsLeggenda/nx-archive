@@ -1,8 +1,9 @@
+import {boundedText,extractImages} from './images.mjs'
 import {validateSpace} from './space-model.mjs'
 const repo='hrmsLeggenda/nx-archive',api='https://api.github.com/repos/'+repo
 const json=(value,status=200)=>new Response(JSON.stringify(value),{status,headers:{'Content-Type':'application/json','Cache-Control':'no-store'}})
-export function allowedPath(path){if(typeof path==='string'&&/^docs\/games\/[a-z0-9][a-z0-9-]{0,63}\/space\.json$/.test(path))return true;return typeof path==='string'&&/^docs\/games\/[a-z0-9-]+\/(guides|notes|maps)\/[a-z0-9][a-z0-9/-]*\.md$/.test(path)&&!path.includes('..')||typeof path==='string'&&/^docs\/games\/fire-emblem-fw\/data\/overrides\/[a-z]+\/[a-z0-9-]+\.json$/.test(path)}
-export function validateSubmission(b){if(!allowedPath(b.path)||typeof b.content!=='string'||b.content.length>200000||!b.content.trim()||typeof b.summary!=='string'||!b.summary.trim()||b.summary.length>200||!(b.baseSha===null||/^[a-f0-9]{40}$/.test(b.baseSha)))throw Object.assign(new Error('路径、正文、摘要或版本无效。'),{status:400})}
+export function allowedPath(path){if(typeof path==='string'&&/^docs\/public\/wiki-assets\/[a-z0-9][a-z0-9-]{0,63}\/[a-f0-9-]{36}\.(png|jpg|gif|webp)$/.test(path))return true;if(typeof path==='string'&&/^docs\/games\/[a-z0-9][a-z0-9-]{0,63}\/space\.json$/.test(path))return true;return typeof path==='string'&&/^docs\/games\/[a-z0-9-]+\/(guides|notes|maps)\/[a-z0-9][a-z0-9/-]*\.md$/.test(path)&&!path.includes('..')||typeof path==='string'&&/^docs\/games\/fire-emblem-fw\/data\/overrides\/[a-z]+\/[a-z0-9-]+\.json$/.test(path)}
+export function validateSubmission(b){if(!/\.(md|json)$/.test(b.path)||!allowedPath(b.path)||typeof b.content!=='string'||b.content.length>200000||!b.content.trim()||typeof b.summary!=='string'||!b.summary.trim()||b.summary.length>200||!(b.baseSha===null||/^[a-f0-9]{40}$/.test(b.baseSha)))throw Object.assign(new Error('路径、正文、摘要或版本无效。'),{status:400})}
 const key=()=>crypto.randomUUID()+crypto.randomUUID()
 async function gh(token,path,method='GET',body){const r=await fetch(path.startsWith('https:')?path:api+path,{method,headers:{Authorization:'Bearer '+token,Accept:'application/vnd.github+json','User-Agent':'NX-Archive','X-GitHub-Api-Version':'2022-11-28'},body:body===undefined?undefined:JSON.stringify(body)});if(r.status===404)return null;if(!r.ok)throw Object.assign(new Error('GitHub 请求失败，请稍后重试。'),{status:r.status===401||r.status===403?403:502});return r.status===204?{}:r.json()}
 function encoded(s){return btoa(Array.from(new TextEncoder().encode(s),b=>String.fromCharCode(b)).join(''))}
@@ -29,19 +30,20 @@ async function route(request,env){
  if(p==='/session'&&request.method==='GET')return json({login:s.login,expires:s.expires})
  if(p==='/logout'&&request.method==='POST'){await env.COLLAB.delete('session:'+s.id);return json({ok:true})}
  if(p==='/submit'&&request.method==='POST'){
-  const raw=await request.text();if(raw.length>250000)return json({error:'请求过大。'},413);const b=JSON.parse(raw);validateSubmission(b);if(b.path.endsWith('/space.json')){let value;try{value=JSON.parse(b.content)}catch{return json({error:'空间数据格式无效。'},400)}if(validateSpace(value).length||b.path!=='docs/games/'+value.id+'/space.json')return json({error:'空间配置无效。'},400)}
+  const raw=await boundedText(request);const b=JSON.parse(raw);let images=[];if(typeof b.content==='string'&&typeof b.path==='string'&&b.path.endsWith('.md')){const game=b.path.match(/^docs\/games\/([a-z0-9-]+)\//)?.[1];if(game){const extracted=extractImages(b.content,game);b.content=extracted.content;images=extracted.assets}}validateSubmission(b);if(b.path.endsWith('/space.json')){let value;try{value=JSON.parse(b.content)}catch{return json({error:'空间数据格式无效。'},400)}if(validateSpace(value).length||b.path!=='docs/games/'+value.id+'/space.json')return json({error:'空间配置无效。'},400)}
   const permission=await gh(s.token,'/collaborators/'+encodeURIComponent(s.login)+'/permission');if(!['admin','maintain','write'].includes(permission?.permission))return json({error:'仓库写入权限已撤销。'},403)
   const head=await gh(s.token,'/git/ref/heads/main'),sha=head.object.sha,current=await gh(s.token,'/contents/'+b.path+'?ref='+sha)
   if((current?.sha??null)!==b.baseSha)return json({error:'主线已更新，请合并最新内容后重试。',currentSha:current?.sha??null,content:current?.content??null},409)
   const branch='work/wiki-web/'+crypto.randomUUID();await gh(s.token,'/git/refs','POST',{ref:'refs/heads/'+branch,sha})
   try{
+   for(const image of images)await gh(s.token,'/contents/'+image.path,'PUT',{message:'保存文档附件',content:image.data,branch})
    await gh(s.token,'/contents/'+b.path,'PUT',{message:b.summary,content:encoded(b.content),branch,...(current?{sha:current.sha}:{})})
    const pr=await gh(s.token,'/pulls','POST',{title:b.summary,head:branch,base:'main',body:'站内编辑提交：`'+b.path+'`\n\n基线：'+(b.baseSha||'新页面')+'\n\n请检查来源、内容差异和 Actions。'})
    return json({number:pr.number,url:pr.html_url,branch},201)
   }catch(e){e.message+=' 提交分支：'+branch;throw e}
  }
  if(p==='/draft'&&['GET','POST'].includes(request.method)){
-  const raw=request.method==='POST'?await request.text():null;if(raw&&raw.length>250000)return json({error:'请求过大。'},413)
+  const raw=request.method==='POST'?await boundedText(request):null
   const b=raw?JSON.parse(raw):null,path=b?.path||u.searchParams.get('path')
   if(!allowedPath(path)||!env.DRAFTS)return json({error:'草稿服务未配置或路径无效。'},400)
   if(b&&(typeof b.content!=='string'||b.content.length>200000||!Number.isInteger(b.revision)||b.revision<0))return json({error:'草稿无效。'},400)
@@ -69,7 +71,7 @@ export default {async fetch(request,env){
  const origin=request.headers.get('Origin'),siteOrigin=env.SITE_ORIGIN?new URL(env.SITE_ORIGIN).origin:'',trusted=origin===siteOrigin
  if(origin&&!trusted)return json({error:'来源不被允许。'},403)
  if(request.method==='OPTIONS')return new Response(null,{status:204,headers:{'Access-Control-Allow-Origin':siteOrigin,'Access-Control-Allow-Headers':'Authorization,Content-Type','Access-Control-Allow-Methods':'GET,POST,OPTIONS','Vary':'Origin'}})
- let result;try{if(Number(request.headers.get('Content-Length'))>250000)return json({error:'请求过大。'},413);result=await route(request,env)}catch(e){result=json({error:e.status?e.message:'服务暂时不可用。'},e.status||500)}
+ let result;try{result=await route(request,env)}catch(e){result=json({error:e.status?e.message:'服务暂时不可用。'},e.status||500)}
  const out=new Response(result.body,result);if(trusted)out.headers.set('Access-Control-Allow-Origin',siteOrigin);out.headers.set('Vary','Origin');out.headers.set('Referrer-Policy','no-referrer');return out
 }}
 
