@@ -1,4 +1,5 @@
 <script setup>
+import {service} from './collaboration-client.mjs'
 import VisualDocumentEditor from './VisualDocumentEditor.vue'
 import CollaborationSubmit from './CollaborationSubmit.vue'
 import {computed,ref,watch,onMounted,onBeforeUnmount} from 'vue'
@@ -106,7 +107,7 @@ onBeforeUnmount(()=>{persist();clearTimeout(timer);epoch++;controller?.abort()})
 </script>
 <template>
 <section class="wiki-editor" v-if="wiki">
-<p>在 {{wiki.title}} Wiki 中{{originalPath?'修改页面':'创建页面'}}。草稿保存在此浏览器；发布需在 GitHub 提交分支与 PR。</p>
+<p>在 {{wiki.title}} Wiki 中{{originalPath?'修改页面':'创建页面'}}。草稿保存在此浏览器；{{service?'使用“保存并发布”自动校验并上线。':'协作服务未启用，可先编辑并导出。'}}</p>
 <p v-if="entity" class="editor-notice">正在维护「{{entity.title}}」的独立补充页。导入数值的修改需同时更新结构化来源记录。</p>
 <p v-if="invalidTarget" role="alert">找不到所请求的可编辑页面。请返回原页面，从编辑入口重新进入。</p>
 <template v-else-if="ready">
@@ -139,7 +140,7 @@ onBeforeUnmount(()=>{persist();clearTimeout(timer);epoch++;controller?.abort()})
 <p role="status" class="editor-check-status">{{status}}</p>
 <label v-if="checkState==='unavailable'" class="editor-category"><input type="checkbox" v-model="acknowledged">将在 GitHub 核对最新文件和同路径页面后提交。</label>
 <CollaborationSubmit :path="sourcePath(game,path)" :content="raw" :summary="summary" :base-sha="baseSha" :disabled="!ready || invalidTarget || errors.length>0 || draftConflict" @restore="raw=$event" @rebase="baseSha=$event.sha;baseRaw=$event.raw;raw=$event.merged;originalPath=baseSha?path:'';draftConflict=false" />
-<div class="editor-handoff">
+<div v-if="!service" class="editor-handoff">
 <p>1. 复制或下载完整 Markdown。2. 前往 GitHub，粘贴文件内容并填写编辑摘要。3. 选择新建分支、提交 PR，等待 Actions 检查与主线发布。</p>
 <a v-if="canSubmit" :href="target" target="_blank" rel="noopener noreferrer">前往 GitHub 提交</a><span v-else aria-disabled="true">完成校验与冲突检查后可前往 GitHub 提交</span>
 <p v-if="copied">内容已复制；GitHub 页面不会自动填入正文。</p>

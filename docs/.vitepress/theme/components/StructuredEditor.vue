@@ -1,4 +1,5 @@
 <script setup>
+import {service} from './collaboration-client.mjs'
 import CollaborationSubmit from './CollaborationSubmit.vue'
 import {computed,ref,onMounted,onBeforeUnmount,watch} from 'vue'
 import {withBase} from 'vitepress'
@@ -132,6 +133,6 @@ onBeforeUnmount(()=>{persist();clearTimeout(timer);epoch++;controller?.abort()})
 <p role="status" class="structured-status">{{message}}</p>
 <label v-if="checkState==='unavailable'" class="editor-category"><input type="checkbox" v-model="acknowledged">将在 GitHub 核对勘误文件后提交。</label>
 <CollaborationSubmit :path="record.file" :content="output" :summary="draft.reason" :base-sha="collaborationSha" :disabled="result.errors.length>0 || stale" @restore="restoreRevision" @rebase="mergeRevision" />
-<div class="editor-handoff"><p>将完整 JSON 粘贴到 <code>{{record.file}}</code>，在 GitHub 新建分支与 PR。Actions 先校验勘误，再合成数据库、模拟器、资源、时间轴和条目页。</p><a v-if="canSubmit" :href="target" target="_blank" rel="noopener noreferrer">前往 GitHub 提交勘误</a><span v-else>完成数据校验与冲突检查后可提交。</span><p v-if="copied">JSON 已复制；GitHub 不会自动填入内容。</p><p><a :href="'https://github.com/hrmsLeggenda/nx-archive/blob/main/'+record.file" target="_blank" rel="noopener noreferrer">查看主线勘误文件</a> · <a :href="withBase('/games/fire-emblem-fw/database')">数据库与模拟器</a></p></div>
+<div v-if="!service" class="editor-handoff"><p>将完整 JSON 粘贴到 <code>{{record.file}}</code>，在 GitHub 新建分支与 PR。Actions 先校验勘误，再合成数据库、模拟器、资源、时间轴和条目页。</p><a v-if="canSubmit" :href="target" target="_blank" rel="noopener noreferrer">前往 GitHub 提交勘误</a><span v-else>完成数据校验与冲突检查后可提交。</span><p v-if="copied">JSON 已复制；GitHub 不会自动填入内容。</p><p><a :href="'https://github.com/hrmsLeggenda/nx-archive/blob/main/'+record.file" target="_blank" rel="noopener noreferrer">查看主线勘误文件</a> · <a :href="withBase('/games/fire-emblem-fw/database')">数据库与模拟器</a></p></div>
 </template></section>
 </template>
