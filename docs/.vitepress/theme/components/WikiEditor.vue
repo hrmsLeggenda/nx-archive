@@ -1,4 +1,6 @@
 <script setup>
+import {service} from './collaboration-client.mjs'
+import VisualDocumentEditor from './VisualDocumentEditor.vue'
 import CollaborationSubmit from './CollaborationSubmit.vue'
 import {computed,ref,watch,onMounted,onBeforeUnmount} from 'vue'
 import {useRoute,withBase} from 'vitepress'
@@ -6,7 +8,7 @@ import wikis from '../../../data/wikis.json'
 import {data as sources} from './editor-pages.data'
 import {data as index} from './wiki-pages.data'
 import {gameFromUrl} from './wiki-model.mjs'
-import {templates,readFields,writeFields,validateDocument,draftKey,readDraft,saveDraft,compareRevision,githubTarget,lineDiff,previewMarkdown,sourcePath,REPO} from './editor-model.mjs'
+import {templates,readFields,writeFields,validateDocument,draftKey,readDraft,saveDraft,compareRevision,githubTarget,lineDiff,previewMarkdown,sourcePath,REPO,splitDocument} from './editor-model.mjs'
 const route=useRoute(),game=computed(()=>gameFromUrl(route.path)),wiki=computed(()=>wikis[game.value])
 const raw=ref(''),path=ref('guides/'),summary=ref(''),template=ref('guide'),tab=ref('write')
 const originalPath=ref(''),baseRaw=ref(''),baseSha=ref(null),pendingDraft=ref(null),draftConflict=ref(false)
@@ -15,6 +17,8 @@ const acknowledged=ref(false),entity=ref(null),invalidTarget=ref(false),copied=r
 const fields=computed(()=>readFields(raw.value))
 const catalog=computed(()=>index.map(p=>({...p,path:p.url.replace('/games/'+p.game+'/','').replace(/\.html$/,'').replace(/\/$/,'/index')||'index'})))
 const errors=computed(()=>validateDocument({raw:raw.value,game:game.value,path:path.value,wikis,pages:catalog.value,originalPath:originalPath.value,summary:summary.value}))
+const visualBody=computed({get:()=>splitDocument(raw.value).body,set:value=>{const prefix=raw.value.match(/^---\r?\n[\s\S]*?\r?\n---(?:\r?\n|$)/)?.[0]||'';raw.value=prefix+value}})
+const visualSafe=computed(()=>!/<[A-Za-z]|\{\{|^:::|^```mermaid/m.test(splitDocument(raw.value).body))
 const preview=computed(()=>previewMarkdown(raw.value))
 const diff=computed(()=>lineDiff(baseRaw.value,raw.value))
 let sessionKey=''
@@ -103,7 +107,7 @@ onBeforeUnmount(()=>{persist();clearTimeout(timer);epoch++;controller?.abort()})
 </script>
 <template>
 <section class="wiki-editor" v-if="wiki">
-<p>在 {{wiki.title}} Wiki 中{{originalPath?'修改页面':'创建页面'}}。草稿保存在此浏览器；发布需在 GitHub 提交分支与 PR。</p>
+<p>在 {{wiki.title}} Wiki 中{{originalPath?'修改页面':'创建页面'}}。草稿保存在此浏览器；{{service?'使用“保存并发布”自动校验并上线。':'协作服务未启用，可先编辑并导出。'}}</p>
 <p v-if="entity" class="editor-notice">正在维护「{{entity.title}}」的独立补充页。导入数值的修改需同时更新结构化来源记录。</p>
 <p v-if="invalidTarget" role="alert">找不到所请求的可编辑页面。请返回原页面，从编辑入口重新进入。</p>
 <template v-else-if="ready">
@@ -121,7 +125,8 @@ onBeforeUnmount(()=>{persist();clearTimeout(timer);epoch++;controller?.abort()})
 <label>核对日期<input aria-label="核对日期" type="date" :value="fields.verified" @input="patch('verified',$event.target.value)"></label>
 <label class="editor-full">资料来源（每行一个链接）<textarea aria-label="资料来源" rows="3" :value="fields.sources.join('\n')" @change="patch('sources',$event.target.value.split(/\r?\n/).map(s=>s.trim()).filter(Boolean))"></textarea></label>
 </div>
-<div class="editor-tabs" role="tablist" aria-label="编辑视图"><button v-for="t in [{id:'write',name:'Markdown'},{id:'preview',name:'预览'},{id:'diff',name:'差异'}]" :key="t.id" role="tab" :aria-selected="tab===t.id" :aria-controls="'panel-'+t.id" @click="tab=t.id">{{t.name}}</button></div>
+<div class="editor-tabs" role="tablist" aria-label="编辑视图"><button v-for="t in [{id:'document',name:'文档编辑'},{id:'write',name:'Markdown'},{id:'preview',name:'预览'},{id:'diff',name:'差异'}]" :key="t.id" role="tab" :aria-selected="tab===t.id" :aria-controls="'panel-'+t.id" @click="tab=t.id">{{t.name}}</button></div>
+<div v-if="tab==='document'" id="panel-document" role="tabpanel"><VisualDocumentEditor v-if="visualSafe" v-model="visualBody" /><p v-else>此页面包含特殊 HTML、Vue 组件或自定义区块，请使用 Markdown 编辑，避免格式转换丢失内容。</p></div>
 <div v-show="tab==='write'" id="panel-write" role="tabpanel"><label for="markdown-content">完整 Markdown（含页面字段）</label><textarea id="markdown-content" class="editor-markdown" aria-label="Markdown 正文" v-model="raw" spellcheck="false"></textarea></div>
 <div v-show="tab==='preview'" id="panel-preview" role="tabpanel"><p class="editor-hint">安全预览支持标题、列表、表格、代码和链接；HTML 与 Vue 组件显示为文本。正式布局由 Actions 预览校验。</p><article class="editor-preview" v-html="preview"></article></div>
 <div v-show="tab==='diff'" id="panel-diff" role="tabpanel"><p>与本次打开页面时的已发布版本比较。长文按相同前后文显示中间变更块。</p><p v-if="!diff.length">正文没有变化。</p><pre class="editor-diff"><span v-for="(line,i) in diff" :key="i" :class="line.type">{{line.type==='added'?'+':'−'}} {{line.text}}
@@ -135,7 +140,7 @@ onBeforeUnmount(()=>{persist();clearTimeout(timer);epoch++;controller?.abort()})
 <p role="status" class="editor-check-status">{{status}}</p>
 <label v-if="checkState==='unavailable'" class="editor-category"><input type="checkbox" v-model="acknowledged">将在 GitHub 核对最新文件和同路径页面后提交。</label>
 <CollaborationSubmit :path="sourcePath(game,path)" :content="raw" :summary="summary" :base-sha="baseSha" :disabled="!ready || invalidTarget || errors.length>0 || draftConflict" @restore="raw=$event" @rebase="baseSha=$event.sha;baseRaw=$event.raw;raw=$event.merged;originalPath=baseSha?path:'';draftConflict=false" />
-<div class="editor-handoff">
+<div v-if="!service" class="editor-handoff">
 <p>1. 复制或下载完整 Markdown。2. 前往 GitHub，粘贴文件内容并填写编辑摘要。3. 选择新建分支、提交 PR，等待 Actions 检查与主线发布。</p>
 <a v-if="canSubmit" :href="target" target="_blank" rel="noopener noreferrer">前往 GitHub 提交</a><span v-else aria-disabled="true">完成校验与冲突检查后可前往 GitHub 提交</span>
 <p v-if="copied">内容已复制；GitHub 页面不会自动填入正文。</p>

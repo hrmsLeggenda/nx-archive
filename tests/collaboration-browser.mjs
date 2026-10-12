@@ -21,9 +21,9 @@ try{
  })
  await page.goto(base+'collaboration.html#session=test-session');await page.getByText('已登录 test').waitFor();assert.equal(new URL(page.url()).hash,'')
  await page.goto(base+'games/fire-emblem-fw/edit.html?page=guides/contributing');await page.getByLabel('编辑摘要',{exact:true}).fill('修正文档')
- await page.getByRole('button',{name:'提交为新的 PR',exact:true}).click();await page.getByRole('link',{name:'PR #9',exact:true}).waitFor();assert.match(submitted.path,/guides\/contributing.md$/);assert.ok(submitted.baseSha)
+ await page.getByRole('button',{name:'保存并发布',exact:true}).click();await page.getByRole('link',{name:'PR #9',exact:true}).waitFor();assert.match(submitted.path,/guides\/contributing.md$/);assert.ok(submitted.baseSha)
  await page.getByRole('button',{name:'读取云端草稿'}).click();await page.getByRole('button',{name:'保存云端草稿'}).click();await page.getByText('云端草稿已保存。',{exact:true}).waitFor()
- conflict=true;await page.getByRole('button',{name:'提交为新的 PR',exact:true}).click();await page.getByText('主线最新内容（保留当前草稿）').click();await page.getByRole('button',{name:'确认合并并采用新基线'}).click();conflict=false;await page.getByRole('button',{name:'提交为新的 PR',exact:true}).click();await page.getByRole('link',{name:'PR #9',exact:true}).waitFor();assert.equal(submitted.baseSha,'a'.repeat(40))
+ conflict=true;await page.getByRole('button',{name:'保存并发布',exact:true}).click();await page.getByText('主线最新内容（保留当前草稿）').click();await page.getByRole('button',{name:'确认合并并采用新基线'}).click();conflict=false;await page.getByRole('button',{name:'保存并发布',exact:true}).click();await page.getByRole('link',{name:'PR #9',exact:true}).waitFor();assert.equal(submitted.baseSha,'a'.repeat(40))
  await page.getByRole('button',{name:'读取版本历史'}).click();await page.getByRole('button',{name:'2026-10-01 previous'}).click();await page.getByRole('button',{name:'载入旧版为草稿（提交后生成新版本）'}).click()
  assert.equal(errors.length,0);console.log('Collaboration mock UI passed; live OAuth is not verified.')
 }finally{await browser.close();server.kill('SIGTERM')}
