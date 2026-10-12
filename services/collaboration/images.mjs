@@ -13,8 +13,11 @@ export function extractImages(content,game){
  const rewritten=content.replace(/data:image\/(png|jpe?g|gif|webp);base64,([A-Za-z0-9+/=]+)/gi,(uri,kind,data)=>{
   if(seen.has(uri))return seen.get(uri)
   if(assets.length>=10)throw invalid('每次保存最多包含 10 张内嵌图片。')
-  let bytes;try{bytes=atob(data)}catch{throw invalid('图片编码无效。')}
-  if(bytes.length>MAX_IMAGE_BYTES)throw invalid('单张图片超过 5 MB，请缩小后再保存。')
+  const padding=data.endsWith('==')?2:data.endsWith('=')?1:0
+  if(data.length%4||data.slice(0,data.length-padding).includes('='))throw invalid('图片编码无效。')
+  const byteLength=data.length/4*3-padding
+  let bytes;try{bytes=atob(data.slice(0,32))}catch{throw invalid('图片编码无效。')}
+  if(byteLength>MAX_IMAGE_BYTES)throw invalid('单张图片超过 5 MB，请缩小后再保存。')
   kind=kind.toLowerCase();const ext=kind==='jpeg'?'jpg':kind
   const valid=ext==='png'?bytes.startsWith('\x89PNG\r\n\x1a\n'):ext==='jpg'?bytes.startsWith('\xff\xd8\xff'):ext==='gif'?/^GIF8[79]a/.test(bytes):bytes.startsWith('RIFF')&&bytes.slice(8,12)==='WEBP'
   if(!valid)throw invalid('图片格式与内容不一致。')
