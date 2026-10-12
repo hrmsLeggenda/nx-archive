@@ -20,6 +20,8 @@ jobs:
       - run: npm test
       - run: python3 tests/overlay_test.py
       - run: npm run build
+        env:
+          VITE_COLLABORATION_URL: ${{ vars.COLLABORATION_URL }}
       - run: python3 scripts/verify-fwe-entries.py
       - run: python3 scripts/verify-fwe-overrides.py
       - run: npm install --no-save --package-lock=false playwright@1.56.1
@@ -29,6 +31,15 @@ jobs:
       - run: node tests/wiki-entries-browser.mjs
       - run: node tests/wiki-editor-browser.mjs
       - run: node tests/structured-browser.mjs
+      - name: Build collaboration interface for mocked integration checks
+        run: npm run build
+        env:
+          VITE_COLLABORATION_URL: https://collaboration.example
+      - run: node tests/collaboration-browser.mjs
+      - name: Restore production configuration for preview artifact
+        run: npm run build
+        env:
+          VITE_COLLABORATION_URL: ${{ vars.COLLABORATION_URL }}
       - uses: actions/upload-artifact@v4
         if: always()
         with:

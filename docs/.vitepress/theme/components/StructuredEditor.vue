@@ -1,10 +1,12 @@
 <script setup>
+import CollaborationSubmit from './CollaborationSubmit.vue'
 import {computed,ref,onMounted,onBeforeUnmount,watch} from 'vue'
 import {withBase} from 'vitepress'
 import data from '../../../games/fire-emblem-fw/data/generated/corrections.json'
 import {definitions,encodeValue,initialDraft,buildPatch,correctionState,correctionKey,loadCorrectionDraft,storeCorrectionDraft} from './structured-model.mjs'
 const dataset=ref('characters'),recordId=ref(''),query=ref(''),draft=ref(null),pending=ref(null),ready=ref(false)
 const tab=ref('fields'),message=ref(''),storageMessage=ref(''),checkState=ref('unchecked'),checking=ref(false),acknowledged=ref(false),stale=ref(false),copied=ref(false)
+const collaborationSha=ref(null)
 const labels={applied:'已应用','needs-review':'上游变化，待复核','matches-upstream':'上游已一致'}
 const records=computed(()=>data.records.filter(r=>r.dataset===dataset.value&&(!query.value||JSON.stringify([r.id,r.label,r.effective.nameZh,r.effective.aliases]).toLowerCase().includes(query.value.toLowerCase()))))
 const record=computed(()=>data.records.find(r=>r.dataset===dataset.value&&r.id===recordId.value))
@@ -23,6 +25,7 @@ function persist(){
 function choose(){
  if(!record.value)return
  epoch++;controller?.abort();clearTimeout(timer);checking.value=false;ready.value=false
+ collaborationSha.value=record.value.sha||null
  sessionKey=correctionKey(dataset.value,recordId.value);draft.value=initialDraft(record.value)
  pending.value=loadCorrectionDraft(storage(),sessionKey);checkState.value='unchecked';acknowledged.value=false;stale.value=false;message.value='';copied.value=false
  ready.value=true
@@ -62,7 +65,12 @@ async function importFile(event){
  const file=event.target.files?.[0];if(!file)return
  try{
   if(file.size>200000)throw new Error('文件过大。')
-  const patch=JSON.parse(await file.text())
+  importRaw(await file.text())
+ }catch(error){message.value='导入失败：'+error.message}
+ event.target.value=''
+}
+function importRaw(raw){
+  const patch=JSON.parse(raw)
   if(patch.gameId!=='fire-emblem-fw'||patch.dataset!==dataset.value||patch.recordId!==recordId.value||!Array.isArray(patch.changes))throw new Error('文件不属于当前记录。')
   const next=initialDraft(record.value)
   next.active=patch.changes.map(c=>c.field);next.importedChanges=patch.changes
@@ -71,9 +79,9 @@ async function importFile(event){
   const checked=buildPatch(record.value,next)
   if(checked.errors.length)throw new Error(checked.errors.join(' '))
   draft.value=next;message.value='已导入勘误提议；请核对当前基线与原值。'
- }catch(error){message.value='导入失败：'+error.message}
- event.target.value=''
 }
+function restoreRevision(raw){try{importRaw(raw)}catch(e){message.value=e.message}}
+function mergeRevision(value){try{importRaw(value.merged);collaborationSha.value=value.sha;message.value='已合并勘误文件；请核对证据和上游字段。'}catch(e){message.value=e.message}}
 watch(draft,()=>{
  if(!ready.value)return
  epoch++;controller?.abort();checking.value=false;checkState.value='unchecked';acknowledged.value=false;copied.value=false
@@ -123,6 +131,7 @@ onBeforeUnmount(()=>{persist();clearTimeout(timer);epoch++;controller?.abort()})
 <button :disabled="result.errors.length>0 || checking || stale" @click="check">{{checking?'正在检查…':'检查勘误文件冲突'}}</button>
 <p role="status" class="structured-status">{{message}}</p>
 <label v-if="checkState==='unavailable'" class="editor-category"><input type="checkbox" v-model="acknowledged">将在 GitHub 核对勘误文件后提交。</label>
+<CollaborationSubmit :path="record.file" :content="output" :summary="draft.reason" :base-sha="collaborationSha" :disabled="result.errors.length>0 || stale" @restore="restoreRevision" @rebase="mergeRevision" />
 <div class="editor-handoff"><p>将完整 JSON 粘贴到 <code>{{record.file}}</code>，在 GitHub 新建分支与 PR。Actions 先校验勘误，再合成数据库、模拟器、资源、时间轴和条目页。</p><a v-if="canSubmit" :href="target" target="_blank" rel="noopener noreferrer">前往 GitHub 提交勘误</a><span v-else>完成数据校验与冲突检查后可提交。</span><p v-if="copied">JSON 已复制；GitHub 不会自动填入内容。</p><p><a :href="'https://github.com/hrmsLeggenda/nx-archive/blob/main/'+record.file" target="_blank" rel="noopener noreferrer">查看主线勘误文件</a> · <a :href="withBase('/games/fire-emblem-fw/database')">数据库与模拟器</a></p></div>
 </template></section>
 </template>

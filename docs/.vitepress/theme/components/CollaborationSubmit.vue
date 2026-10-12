@@ -1,0 +1,17 @@
+<script setup>
+import {ref,watch} from 'vue'
+import {withBase} from 'vitepress'
+import {service,call} from './collaboration-client.mjs'
+const emit=defineEmits(['rebase','restore'])
+const props=defineProps({path:String,content:String,summary:String,baseSha:{default:null},disabled:Boolean})
+const cloudRevision=ref(0),cloudContent=ref(''),cloudLoaded=ref(false),history=ref([]),restored=ref(''),merged=ref(''),
+busy=ref(false),message=ref(''),pr=ref(null),conflict=ref(null)
+watch(()=>props.path,()=>{cloudRevision.value=0;cloudContent.value='';cloudLoaded.value=false;history.value=[];restored.value='';conflict.value=null;pr.value=null})
+async function submit(){busy.value=true;message.value='';pr.value=null;conflict.value=null;try{pr.value=await call('/submit',{path:props.path,content:props.content,summary:props.summary,baseSha:props.baseSha})}catch(e){message.value=e.message;if(e.status===409){conflict.value=e.current;merged.value=props.content}}finally{busy.value=false}}
+async function loadDraft(){try{const d=await call('/draft?path='+encodeURIComponent(props.path));cloudRevision.value=d.revision;cloudContent.value=d.content;cloudLoaded.value=true;message.value=d.revision?'已读取云端草稿；恢复前请核对正文。':'当前没有云端草稿。'}catch(e){message.value=e.message}}
+async function saveDraft(){try{const d=await call('/draft',{path:props.path,content:props.content,revision:cloudRevision.value});cloudRevision.value=d.revision;message.value='云端草稿已保存。'}catch(e){message.value=e.message;cloudLoaded.value=false}}
+async function loadHistory(){try{history.value=await call('/history?path='+encodeURIComponent(props.path))}catch(e){message.value=e.message}}
+async function loadRevision(sha){try{const v=await call('/revision?path='+encodeURIComponent(props.path)+'&sha='+sha);restored.value=decode(v.content)}catch(e){message.value=e.message}}
+function decode(value){try{return new TextDecoder().decode(Uint8Array.from(atob(value.replace(/\s/g,'')),x=>x.charCodeAt(0)))}catch{return '请在 GitHub 查看最新版本。'}}
+</script>
+<template><section class="editor-notice"><h3>站内提交与审阅</h3><template v-if="service"><p><a :href="withBase('/collaboration')">登录 GitHub / 查看提交状态</a></p><button :disabled="disabled||busy" @click="submit">{{busy?'正在提交…':'提交为新的 PR'}}</button><p>提交创建独立分支，发布需审阅及 Actions 检查通过。</p><p role="status">{{message}}</p><p v-if="pr">已创建 <a :href="pr.url" target="_blank" rel="noopener">PR #{{pr.number}}</a>。</p><details v-if="conflict"><summary>主线最新内容（保留当前草稿）</summary><p>将当前草稿与下面的最新正文合并，再确认采用新基线。</p><pre>{{conflict.content?decode(conflict.content):'文件已删除。'}}</pre><label>合并结果<textarea aria-label="冲突合并结果" v-model="merged" rows="12"></textarea></label><button @click="emit('rebase',{sha:conflict.currentSha,raw:conflict.content?decode(conflict.content):'',merged});conflict=null">确认合并并采用新基线</button></details><button @click="loadDraft">读取云端草稿</button><button :disabled="!cloudLoaded" @click="saveDraft">保存云端草稿</button><details v-if="cloudContent"><summary>云端草稿预览</summary><pre>{{cloudContent}}</pre><button @click="emit('restore',cloudContent)">载入云端草稿</button></details><button @click="loadHistory">读取版本历史</button><ul><li v-for="h in history" :key="h.sha"><button @click="loadRevision(h.sha)">{{h.date}} {{h.message}}</button></li></ul><details v-if="restored" open><summary>旧版本预览</summary><pre>{{restored}}</pre><button @click="emit('restore',restored);restored=''">载入旧版为草稿（提交后生成新版本）</button></details></template><p v-else>协作服务尚未启用；当前仍可通过下方 GitHub 入口提交。</p></section></template>
