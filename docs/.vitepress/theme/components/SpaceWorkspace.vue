@@ -19,15 +19,16 @@ const legacy=computed(()=>sources.pages.filter(p=>p.game===spaceId.value&&!['gui
 const draftKey=computed(()=>`nx-archive:space-draft:${spaceId.value}:${pagePath.value||'new'}`)
 let timer,poll
 function navigate(id,path='',category=''){
+ persist();
  spaceId.value=id;pagePath.value=path;categoryId.value=category;editing.value=false;managing.value=false;conflict.value=null;status.value=''
  const q=new URLSearchParams();if(id)q.set('space',id);if(path)q.set('page',path);if(category)q.set('category',category)
  history.pushState(null,'',withBase('/workspace.html')+(q.size?'?'+q:''));loadDraft()
 }
-function loadRoute(){const q=new URLSearchParams(location.search);spaceId.value=q.get('space')||'';pagePath.value=q.get('page')||'';categoryId.value=q.get('category')||'';editing.value=false;managing.value=false;loadDraft()}
+function loadRoute(){const q=new URLSearchParams(location.search);spaceId.value=q.get('space')||'';pagePath.value=q.get('page')||'';categoryId.value=q.get('category')||'';editing.value=false;managing.value=false;loadDraft();if(pending.value&&!selected.value)restore()}
 function loadDraft(){try{pending.value=JSON.parse(localStorage.getItem(draftKey.value)||'null')}catch{pending.value=null}}
 function persist(){if(!editing.value)return;try{localStorage.setItem(draftKey.value,JSON.stringify({title:title.value,body:body.value,summary:summary.value,categoryId:categoryId.value,baseSha:baseSha.value,baseRaw:baseRaw.value,pagePath:pagePath.value}));}catch{status.value='浏览器无法保存草稿，请复制正文保留。'}}
 function edit(){if(!selected.value)return;title.value=selected.value.title;body.value=splitDocument(selected.value.raw).body;baseRaw.value=selected.value.raw;baseSha.value=selected.value.sha;summary.value='';categoryId.value=categoriesFor(selected.value)[0]||space.value.categories[0]?.id||'';editing.value=true;loadDraft()}
-function newPage(){if(!categoryId.value){status.value='请先选择分类菜单，再新建页面。';return}pagePath.value='guides/'+crypto.randomUUID();title.value='';body.value='';baseRaw.value='';baseSha.value=null;summary.value='';editing.value=true;pending.value=null;conflict.value=null}
+function newPage(){persist();if(!categoryId.value){status.value='请先选择分类菜单，再新建页面。';return}pagePath.value='guides/'+crypto.randomUUID();title.value='';body.value='';baseRaw.value='';baseSha.value=null;summary.value='';editing.value=true;pending.value=null;conflict.value=null;const q=new URLSearchParams({space:spaceId.value,page:pagePath.value,category:categoryId.value});history.pushState(null,'',withBase('/workspace.html')+'?'+q)}
 function restore(){const d=pending.value;if(!d)return;title.value=d.title;body.value=d.body;summary.value=d.summary;categoryId.value=d.categoryId;baseRaw.value=d.baseRaw;baseSha.value=d.baseSha;pagePath.value=d.pagePath;editing.value=true;pending.value=null;status.value='已恢复草稿；在线保存将检查最新版本。'}
 function manage(){menu.value=space.value.categories.map(c=>({...c}));managing.value=true;status.value=''}
 function categoriesFor(p){const defined=readFields(p.raw).categories;return defined.length?defined:wikis[p.game]?.groups.filter(g=>g.items.some(i=>i.path===p.path)).map(g=>g.id)||[]}
@@ -45,7 +46,7 @@ async function savePage(){
  if(!title.value.trim()||!body.value.trim()||!space.value.categories.some(c=>c.id===categoryId.value)){status.value='请填写页面标题、正文并选择分类。';return}
  const fields=writeFields(baseRaw.value,{...readFields(baseRaw.value),title:title.value,categories:[categoryId.value],kind:'文档'}),prefix=fields.match(/^---\r?\n[\s\S]*?\r?\n---(?:\r?\n|$)/)?.[0]||'',raw=prefix+body.value,path='docs/games/'+spaceId.value+'/'+pagePath.value+'.md'
  const result=await submit(path,raw,baseSha.value,summary.value.trim()||'更新页面：'+title.value)
- if(result){try{localStorage.removeItem(draftKey.value)}catch{}editing.value=false}
+ if(result){const value={game:spaceId.value,path:pagePath.value,title:title.value,raw,sha:baseSha.value,url:'/workspace.html?space='+spaceId.value+'&page='+pagePath.value};const i=pages.value.findIndex(p=>p.game===spaceId.value&&p.path===pagePath.value);if(i<0)pages.value.push(value);else pages.value[i]=value;try{localStorage.removeItem(draftKey.value)}catch{}editing.value=false}
 }
 async function saveMenu(){const value={schemaVersion:1,id:space.value.id,title:space.value.title,description:space.value.description,categories:menu.value},errors=validateSpace(value);if(errors.length){status.value=errors.join(' ');return}if(await submit(spaceFile(value.id),JSON.stringify(value,null,2)+'\n',space.value.sha,'更新空间分类菜单：'+value.title)){managing.value=false}}
 async function createSpace(){
