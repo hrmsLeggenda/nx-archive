@@ -11,6 +11,7 @@
     "data:import": "python3 scripts/import-fwe.py && python3 scripts/apply-fwe-overrides.py && python3 scripts/build-fwe-entries.py"
   },
   "devDependencies": {
+    "@toast-ui/editor": "^3.2.2",
     "minisearch": "7.1.2",
     "vitepress": "1.6.4",
     "vue": "3.5.22"

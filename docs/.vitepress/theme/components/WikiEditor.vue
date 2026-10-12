@@ -1,4 +1,5 @@
 <script setup>
+import VisualDocumentEditor from './VisualDocumentEditor.vue'
 import CollaborationSubmit from './CollaborationSubmit.vue'
 import {computed,ref,watch,onMounted,onBeforeUnmount} from 'vue'
 import {useRoute,withBase} from 'vitepress'
@@ -6,7 +7,7 @@ import wikis from '../../../data/wikis.json'
 import {data as sources} from './editor-pages.data'
 import {data as index} from './wiki-pages.data'
 import {gameFromUrl} from './wiki-model.mjs'
-import {templates,readFields,writeFields,validateDocument,draftKey,readDraft,saveDraft,compareRevision,githubTarget,lineDiff,previewMarkdown,sourcePath,REPO} from './editor-model.mjs'
+import {templates,readFields,writeFields,validateDocument,draftKey,readDraft,saveDraft,compareRevision,githubTarget,lineDiff,previewMarkdown,sourcePath,REPO,splitDocument} from './editor-model.mjs'
 const route=useRoute(),game=computed(()=>gameFromUrl(route.path)),wiki=computed(()=>wikis[game.value])
 const raw=ref(''),path=ref('guides/'),summary=ref(''),template=ref('guide'),tab=ref('write')
 const originalPath=ref(''),baseRaw=ref(''),baseSha=ref(null),pendingDraft=ref(null),draftConflict=ref(false)
@@ -15,6 +16,8 @@ const acknowledged=ref(false),entity=ref(null),invalidTarget=ref(false),copied=r
 const fields=computed(()=>readFields(raw.value))
 const catalog=computed(()=>index.map(p=>({...p,path:p.url.replace('/games/'+p.game+'/','').replace(/\.html$/,'').replace(/\/$/,'/index')||'index'})))
 const errors=computed(()=>validateDocument({raw:raw.value,game:game.value,path:path.value,wikis,pages:catalog.value,originalPath:originalPath.value,summary:summary.value}))
+const visualBody=computed({get:()=>splitDocument(raw.value).body,set:value=>{const prefix=raw.value.match(/^---\r?\n[\s\S]*?\r?\n---(?:\r?\n|$)/)?.[0]||'';raw.value=prefix+value}})
+const visualSafe=computed(()=>!/<[A-Za-z]|\{\{|^:::|^```mermaid/m.test(splitDocument(raw.value).body))
 const preview=computed(()=>previewMarkdown(raw.value))
 const diff=computed(()=>lineDiff(baseRaw.value,raw.value))
 let sessionKey=''
@@ -121,7 +124,8 @@ onBeforeUnmount(()=>{persist();clearTimeout(timer);epoch++;controller?.abort()})
 <label>核对日期<input aria-label="核对日期" type="date" :value="fields.verified" @input="patch('verified',$event.target.value)"></label>
 <label class="editor-full">资料来源（每行一个链接）<textarea aria-label="资料来源" rows="3" :value="fields.sources.join('\n')" @change="patch('sources',$event.target.value.split(/\r?\n/).map(s=>s.trim()).filter(Boolean))"></textarea></label>
 </div>
-<div class="editor-tabs" role="tablist" aria-label="编辑视图"><button v-for="t in [{id:'write',name:'Markdown'},{id:'preview',name:'预览'},{id:'diff',name:'差异'}]" :key="t.id" role="tab" :aria-selected="tab===t.id" :aria-controls="'panel-'+t.id" @click="tab=t.id">{{t.name}}</button></div>
+<div class="editor-tabs" role="tablist" aria-label="编辑视图"><button v-for="t in [{id:'document',name:'文档编辑'},{id:'write',name:'Markdown'},{id:'preview',name:'预览'},{id:'diff',name:'差异'}]" :key="t.id" role="tab" :aria-selected="tab===t.id" :aria-controls="'panel-'+t.id" @click="tab=t.id">{{t.name}}</button></div>
+<div v-if="tab==='document'" id="panel-document" role="tabpanel"><VisualDocumentEditor v-if="visualSafe" v-model="visualBody" /><p v-else>此页面包含特殊 HTML、Vue 组件或自定义区块，请使用 Markdown 编辑，避免格式转换丢失内容。</p></div>
 <div v-show="tab==='write'" id="panel-write" role="tabpanel"><label for="markdown-content">完整 Markdown（含页面字段）</label><textarea id="markdown-content" class="editor-markdown" aria-label="Markdown 正文" v-model="raw" spellcheck="false"></textarea></div>
 <div v-show="tab==='preview'" id="panel-preview" role="tabpanel"><p class="editor-hint">安全预览支持标题、列表、表格、代码和链接；HTML 与 Vue 组件显示为文本。正式布局由 Actions 预览校验。</p><article class="editor-preview" v-html="preview"></article></div>
 <div v-show="tab==='diff'" id="panel-diff" role="tabpanel"><p>与本次打开页面时的已发布版本比较。长文按相同前后文显示中间变更块。</p><p v-if="!diff.length">正文没有变化。</p><pre class="editor-diff"><span v-for="(line,i) in diff" :key="i" :class="line.type">{{line.type==='added'?'+':'−'}} {{line.text}}
