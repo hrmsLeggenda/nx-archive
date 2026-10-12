@@ -25,5 +25,12 @@ try{
  await page.getByRole('button',{name:'读取云端草稿'}).click();await page.getByRole('button',{name:'保存云端草稿'}).click();await page.getByText('云端草稿已保存。',{exact:true}).waitFor()
  conflict=true;await page.getByRole('button',{name:'保存并发布',exact:true}).click();await page.getByText('主线最新内容（保留当前草稿）').click();await page.getByRole('button',{name:'确认合并并采用新基线'}).click();conflict=false;await page.getByRole('button',{name:'保存并发布',exact:true}).click();await page.getByRole('link',{name:'PR #9',exact:true}).waitFor();assert.equal(submitted.baseSha,'a'.repeat(40))
  await page.getByRole('button',{name:'读取版本历史'}).click();await page.getByRole('button',{name:'2026-10-01 previous'}).click();await page.getByRole('button',{name:'载入旧版为草稿（提交后生成新版本）'}).click()
+ await page.goto(base)
+ await page.getByRole('button',{name:'创建新空间',exact:true}).click()
+ await page.getByLabel('空间名称').fill('集成验收空间')
+ await page.getByRole('button',{name:'创建并保存',exact:true}).click()
+ await page.getByText('空间正在发布，请部署完成后刷新首页。',{exact:true}).waitFor()
+ assert.match(submitted.path,/^docs\/games\/space-[a-f0-9-]+\/space.json$/)
+ assert.equal(JSON.parse(submitted.content).title,'集成验收空间')
  assert.equal(errors.length,0);console.log('Collaboration mock UI passed; live OAuth is not verified.')
 }finally{await browser.close();server.kill('SIGTERM')}

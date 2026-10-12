@@ -9,7 +9,7 @@ try{
  const base='http://127.0.0.1:4174/nx-archive/'
  for(let i=0;i<40;i++){try{if((await fetch(base)).ok)break}catch{}await new Promise(r=>setTimeout(r,250))}
  await page.goto(base)
- assert.equal(await page.getByRole('link',{name:'进入攻略板块 →'}).count(),4)
+ assert.equal(await page.locator('.space-cards > button').count(),4)
  await page.goto(base+'games/fire-emblem-fw/categories/training.html')
  await page.getByLabel('筛选页面',{exact:true}).fill('职业')
  assert.ok(await page.locator('.page-directory li').count()>0)

@@ -22,7 +22,7 @@ export default defineConfig({
   },
   themeConfig: {
     logo: '/logo.svg', siteTitle: 'NX Archive',
-    nav: [{ text: '游戏档案', link: '/games/' }, { text: '贡献指南', link: '/contribute' }],
+    nav: [{ text: '空间', link: '/' }, { text: '游戏档案', link: '/games/' }, { text: '贡献指南', link: '/contribute' }],
     sidebar: { ...sidebar, '/': [{ text: '站点导航', items: [{ text: '游戏板块', link: '/games/' }, { text: '贡献指南', link: '/contribute' }] }] },
     search: { provider: 'local', options: { miniSearch: { options: { tokenize }, searchOptions: { combineWith: 'AND', prefix: true, fuzzy: false } }, locales: { root: { translations: { button: { buttonText: '搜索攻略', buttonAriaLabel: '搜索攻略' }, modal: { noResultsText: '没有找到结果', resetButtonTitle: '清空', footer: { selectText: '选择', navigateText: '切换', closeText: '关闭' } } } } } } },
     editLink: { pattern: 'https://github.com/hrmsLeggenda/nx-archive/edit/main/docs/:path', text: '在 GitHub 编辑此页' },
