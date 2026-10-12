@@ -1,0 +1,35 @@
+name: Deploy collaboration service
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: collaboration
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+      - run: node --test tests/collaboration.test.mjs
+      - name: Generate deployment configuration
+        env:
+          CLIENT_ID: ${{ vars.GITHUB_OAUTH_CLIENT_ID }}
+          CALLBACK: ${{ vars.COLLABORATION_CALLBACK_URL }}
+          KV_ID: ${{ vars.COLLABORATION_KV_ID }}
+        run: |
+          python3 - <<'PY'
+          import os,json
+          from pathlib import Path
+          values={k:os.environ[k] for k in ['CLIENT_ID','CALLBACK','KV_ID']}
+          if not all(values.values()): raise SystemExit('Configure collaboration environment variables first')
+          config={'name':'nx-archive-collaboration','main':'worker.mjs','compatibility_date':'2026-10-01','vars':{'SITE_ORIGIN':'https://hrmsLeggenda.github.io','GITHUB_CLIENT_ID':values['CLIENT_ID'],'CALLBACK_URL':values['CALLBACK']},'kv_namespaces':[{'binding':'COLLAB','id':values['KV_ID']}],'durable_objects':{'bindings':[{'name':'DRAFTS','class_name':'DraftStore'}]},'migrations':[{'tag':'v1','new_sqlite_classes':['DraftStore']}]}
+          Path('services/collaboration/wrangler.json').write_text(json.dumps(config))
+          PY
+      - name: Deploy Worker
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        working-directory: services/collaboration
+        run: npx wrangler@4 deploy --config wrangler.json

@@ -1,4 +1,5 @@
 <script setup>
+import CollaborationSubmit from './CollaborationSubmit.vue'
 import {computed,ref,watch,onMounted,onBeforeUnmount} from 'vue'
 import {useRoute,withBase} from 'vitepress'
 import wikis from '../../../data/wikis.json'
@@ -133,6 +134,7 @@ onBeforeUnmount(()=>{persist();clearTimeout(timer);epoch++;controller?.abort()})
 <button :disabled="checking||errors.length>0||draftConflict" @click="check">{{checking?'正在检查…':'检查主线冲突'}}</button>
 <p role="status" class="editor-check-status">{{status}}</p>
 <label v-if="checkState==='unavailable'" class="editor-category"><input type="checkbox" v-model="acknowledged">将在 GitHub 核对最新文件和同路径页面后提交。</label>
+<CollaborationSubmit :path="sourcePath(game,path)" :content="raw" :summary="summary" :base-sha="baseSha" :disabled="!ready || invalidTarget || errors.length>0 || draftConflict" @restore="raw=$event" @rebase="baseSha=$event.sha;baseRaw=$event.raw;raw=$event.merged;originalPath=baseSha?path:'';draftConflict=false" />
 <div class="editor-handoff">
 <p>1. 复制或下载完整 Markdown。2. 前往 GitHub，粘贴文件内容并填写编辑摘要。3. 选择新建分支、提交 PR，等待 Actions 检查与主线发布。</p>
 <a v-if="canSubmit" :href="target" target="_blank" rel="noopener noreferrer">前往 GitHub 提交</a><span v-else aria-disabled="true">完成校验与冲突检查后可前往 GitHub 提交</span>
