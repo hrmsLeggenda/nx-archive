@@ -73,6 +73,6 @@ CI 增加编辑模型测试与浏览器验收：新建、已有编辑、字段�
 
 ## 第五批：站内协作服务（待管理员配置启用）
 
-新增 Cloudflare Worker GitHub OAuth 登录、仓库写权限校验、一小时服务端会话、编辑器直接创建分支与 PR、主线 SHA 冲突检查、PR 审阅及 Actions 状态。GitHub access token 仅存在服务端 KV；浏览器只保存短期不透明会话。前端未配置服务地址时明确提示尚未启用，并保留原有 GitHub 提交流程。支持按账户与路径隔离的云端草稿（Durable Object 版本比较）、历史版本载入为新修改和冲突合并；不自动合并 PR。
+新增 Cloudflare Worker GitHub App 用户授权登录、仓库写权限校验、一小时服务端会话、编辑器直接创建分支与 PR、主线 SHA 冲突检查、PR 审阅及 Actions 状态。GitHub access token 仅存在服务端 KV；浏览器只保存短期不透明会话。前端未配置服务地址时明确提示尚未启用，并保留原有 GitHub 提交流程。支持按账户与路径隔离的云端草稿（Durable Object 版本比较）、历史版本载入为新修改和冲突合并；不自动合并 PR。
 
 服务端托管扩展到 Cloudflare Workers；部署仍由 Actions 执行，网站仍用 Pages。配置见 services/collaboration/README.md。第五批上线验收必须补做真实账户登录、提交、权限撤销和并发修改检查，不能用接口模拟代替。

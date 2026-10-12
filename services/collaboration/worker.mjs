@@ -12,7 +12,7 @@ async function route(request,env){
  if(!env.GITHUB_CLIENT_ID||!env.GITHUB_CLIENT_SECRET||!env.COLLAB) return json({error:'协作服务尚未配置。'},503)
  if(p==='/auth/login'){
   const state=key();await env.COLLAB.put('state:'+state,'1',{expirationTtl:600})
-  const target=new URL('https://github.com/login/oauth/authorize');target.search=new URLSearchParams({client_id:env.GITHUB_CLIENT_ID,redirect_uri:env.CALLBACK_URL,scope:'public_repo',state}).toString();return Response.redirect(target,302)
+  const target=new URL('https://github.com/login/oauth/authorize');target.search=new URLSearchParams({client_id:env.GITHUB_CLIENT_ID,redirect_uri:env.CALLBACK_URL,state}).toString();return Response.redirect(target,302)
  }
  if(p==='/auth/callback'){
   const state=u.searchParams.get('state'),code=u.searchParams.get('code');if(!state||!code||!await env.COLLAB.get('state:'+state))return json({error:'授权状态已失效。'},400)
