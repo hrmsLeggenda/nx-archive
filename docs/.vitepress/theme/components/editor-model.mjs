@@ -84,6 +84,7 @@ export function lineDiff(before,after){
 const escape=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;')
 function inline(raw){
  let s=escape(raw)
+ s=s.replace(/!\[([^\]]*)\]\((\/nx-archive\/wiki-assets\/[a-z0-9-]+\/[a-f0-9-]{36}\.(?:png|jpg|gif|webp))\)/g,(_,label,url)=>'<img src="'+url+'" alt="'+label+'" loading="lazy" style="max-width:100%;height:auto">')
  s=s.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+|\/[^\s)]*|\.{1,2}\/[^\s)]*)\)/g,(_,label,url)=>'<a href="'+url+'" target="_blank" rel="noopener noreferrer">'+label+'</a>')
  return s.replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>').replace(/\x60([^\x60]+)\x60/g,'<code>$1</code>')
 }

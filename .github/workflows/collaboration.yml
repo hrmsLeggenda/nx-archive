@@ -1,6 +1,9 @@
 name: Deploy collaboration service
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['services/collaboration/**', '.github/workflows/collaboration.yml']
 permissions:
   contents: read
 jobs:
@@ -12,7 +15,7 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: 22
-      - run: node --test tests/collaboration.test.mjs
+      - run: node --test tests/collaboration.test.mjs tests/images.test.mjs
       - name: Generate deployment configuration
         env:
           CLIENT_ID: ${{ vars.GITHUB_OAUTH_CLIENT_ID }}
