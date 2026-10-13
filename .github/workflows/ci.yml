@@ -52,6 +52,8 @@ jobs:
             wiki-editor-mobile.png
             structured-mobile.png
             spaces-mobile.png
+            wiki-desktop-reading.png
+            wiki-desktop-editing.png
       - uses: actions/upload-artifact@v4
         with:
           name: wiki-preview

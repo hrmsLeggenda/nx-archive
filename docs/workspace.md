@@ -1,5 +1,5 @@
 ---
-layout: page
+layout: false
 title: 空间与文档
 ---
 
