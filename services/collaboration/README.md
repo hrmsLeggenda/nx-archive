@@ -4,7 +4,7 @@
 
 1. 在 Cloudflare 创建 KV namespace。GitHub 仓库新增 environment `collaboration`。
 2. 注册 GitHub App（用户授权流程），Homepage 使用现有 Pages 地址，callback 为 Worker 的 `/auth/callback`。授予 Repository permissions：Contents 和 Pull requests 读写、Checks 只读、Metadata 只读；只安装到 nx-archive。使用 App 的 Client ID / Client secret（不是 App ID / 私钥），不需要 OAuth scope。
-3. environment variables：GITHUB_OAUTH_CLIENT_ID、COLLABORATION_CALLBACK_URL、COLLABORATION_KV_ID；secrets：CLOUDFLARE_API_TOKEN、CLOUDFLARE_ACCOUNT_ID。Cloudflare token 仅需对应账户 Worker 与 KV 部署权限。
+3. environment variables：WIKI_CLIENT_ID、COLLABORATION_CALLBACK_URL、COLLABORATION_KV_ID；secrets：CLOUDFLARE_API_TOKEN、CLOUDFLARE_ACCOUNT_ID。Cloudflare token 仅需对应账户 Worker 与 KV 部署权限。
 4. 在 Worker secret 中设置 GITHUB_CLIENT_SECRET（不写入源码、不发聊天）。运行 Deploy collaboration service workflow；检查 `/health`。
 5. 仓库 variable COLLABORATION_URL 设置 Worker HTTPS 地址（无末尾斜杠），重新部署 Pages。
 6. 验收真实登录、注销、拒绝无写权限用户、Markdown/JSON 创建 PR、同文件并发冲突、Actions 状态和 GitHub 审阅合并。PR 由用户令牌创建，正常触发 CI。
