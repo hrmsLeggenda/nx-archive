@@ -1,7 +1,0 @@
-name = "nx-archive-collaboration"
-main = "worker.mjs"
-compatibility_date = "2026-10-01"
-[vars]
-SITE_ORIGIN = "https://hrmsLeggenda.github.io"
-# Configure GITHUB_CLIENT_ID and CALLBACK_URL before deploying.
-# Bind a KV namespace named COLLAB; store GITHUB_CLIENT_SECRET as a Worker secret.

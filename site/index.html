@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f8fc">
+  <meta name="description" content="NX Archive：Switch / Switch 2 游戏攻略导航，快速查找游戏 Wiki、图鉴和实用攻略。">
+  <title>NX Archive | 游戏攻略导航</title>
+  <link rel="icon" href="./logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#game-library">跳转到游戏目录</a>
+  <div class="site-shell">
+    <aside class="sidebar" aria-label="站点导航">
+      <a class="brand" href="./" aria-label="NX Archive 首页">
+        <span class="brand-logo" aria-hidden="true"><span>N</span><span>X</span></span>
+        <span class="brand-words"><strong>NX ARCHIVE</strong><small>游戏攻略导航</small></span>
+      </a>
+      <div class="nav-label">探索 EXPLORE</div>
+      <nav class="side-nav" aria-label="游戏类型">
+        <button type="button" class="side-link is-active" data-genre="全部" aria-pressed="true"><span class="nav-icon">▦</span> 全部游戏 <span class="side-end" id="side-total">—</span></button>
+        <button type="button" class="side-link" data-genre="策略战棋" aria-pressed="false"><span class="nav-icon">♜</span> 策略战棋</button>
+        <button type="button" class="side-link" data-genre="角色扮演" aria-pressed="false"><span class="nav-icon">✧</span> 角色扮演</button>
+        <button type="button" class="side-link" data-genre="动作冒险" aria-pressed="false"><span class="nav-icon">⚔</span> 动作冒险</button>
+        <button type="button" class="side-link" data-genre="竞速" aria-pressed="false"><span class="nav-icon">◈</span> 竞速游戏</button>
+        <button type="button" class="side-link" data-genre="休闲模拟" aria-pressed="false"><span class="nav-icon">✿</span> 休闲模拟</button>
+        <button type="button" class="side-link" data-genre="多人对战" aria-pressed="false"><span class="nav-icon">✳</span> 多人对战</button>
+      </nav>
+      <div class="nav-label nav-label-secondary">快捷入口</div>
+      <nav class="side-nav" aria-label="快捷入口">
+        <a class="side-link side-anchor" href="#featured"><span class="nav-icon">✦</span> 编辑精选</a>
+        <button type="button" class="side-link" id="side-favorites" aria-pressed="false"><span class="nav-icon">♡</span> 我的收藏 <span class="side-end" id="fav-count">0</span></button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="sidebar-tip"><span class="tip-spark">✦</span><strong>专注于游戏，而不是找攻略。</strong><p>一个入口，通往各社区的实用资料。</p></div>
+        <a class="sidebar-github" href="https://github.com/hrmsLeggenda/nx-archive" target="_blank" rel="noopener noreferrer">GitHub 开源仓库 <span aria-hidden="true">↗</span></a>
+      </div>
+    </aside>
+    <div class="main-shell">
+      <header class="topbar">
+        <div class="crumb"><span>NX ARCHIVE</span><span class="crumb-divider">/</span><strong>探索游戏</strong></div>
+        <div class="top-actions">
+          <label class="search-field" for="search-input">
+            <svg viewBox="0 0 24 24" aria-hidden="true" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg>
+            <input id="search-input" type="search" autocomplete="off" placeholder="搜索游戏、英文名或系列…" aria-label="搜索游戏">
+            <kbd>/</kbd>
+          </label>
+          <a class="top-github" href="https://github.com/hrmsLeggenda/nx-archive" target="_blank" rel="noopener noreferrer" aria-label="访问项目 GitHub">↗</a>
+        </div>
+      </header>
+      <main class="content">
+        <section class="welcome" aria-labelledby="welcome-title">
+          <div class="welcome-copy">
+            <span class="eyebrow"><span class="pulse-dot"></span> YOUR NEXT ADVENTURE STARTS HERE</span>
+            <h1 id="welcome-title">让每一段<span class="gradient-word">游戏旅程</span><br>都能找到方向。</h1>
+            <p>精选 Nintendo Switch / Switch 2 攻略与 Wiki 导航。<br>快速发现、搜索，并直达你需要的游戏资料。</p>
+            <a class="primary-link" href="#game-library">探索游戏目录 <span aria-hidden="true">↘</span></a>
+          </div>
+          <div class="welcome-art" aria-hidden="true"><div class="orbit orbit-outer"></div><div class="orbit orbit-mid"></div><div class="orbit orbit-inner"></div><div class="hero-cube"><span>N</span><span>X</span></div><span class="art-star star-one">✦</span><span class="art-star star-two">✧</span><span class="art-star star-three">✳</span></div>
+        </section>
+        <section class="featured-section" id="featured" aria-labelledby="featured-title">
+          <div class="section-heading"><div><span class="section-overline">EDITOR'S PICKS</span><h2 id="featured-title">精选游戏 <span class="h2-note">/ 推荐直达</span></h2></div><span class="section-aside">从这些世界开始探索 <span aria-hidden="true">↗</span></span></div>
+          <div class="featured-grid" id="featured-grid" aria-live="polite"></div>
+        </section>
+        <section class="library-section" id="game-library" aria-labelledby="library-title">
+          <div class="section-heading"><div><span class="section-overline">GAME DIRECTORY</span><h2 id="library-title">游戏百科 <span class="h2-note">/ 全部收录</span></h2></div><span class="result-count" id="result-count" aria-live="polite">载入中…</span></div>
+          <div class="library-tools">
+            <div class="platform-filters" role="group" aria-label="按游戏平台筛选">
+              <button type="button" data-platform="全部" class="filter-pill is-selected" aria-pressed="true">全部平台</button>
+              <button type="button" data-platform="Switch 2" class="filter-pill" aria-pressed="false">Switch 2</button>
+              <button type="button" data-platform="Switch" class="filter-pill" aria-pressed="false">Switch</button>
+            </div>
+            <button type="button" class="favorites-toggle" id="favorite-filter" aria-pressed="false"><span aria-hidden="true">♡</span> 仅看收藏</button>
+          </div>
+          <div class="game-grid" id="game-grid"></div>
+          <div class="empty-state" id="empty-state" hidden><span class="empty-art" aria-hidden="true">⌕</span><h3>没有找到符合条件的游戏</h3><p>试试其他关键词，或清除当前筛选。</p><button type="button" id="reset-filters">清除筛选</button></div>
+          <noscript><p class="no-js">需要启用 JavaScript 才能加载游戏目录与搜索筛选。您仍可从 <a href="https://github.com/hrmsLeggenda/nx-archive/blob/main/site/games.json">公开目录数据</a> 查看入口。</p></noscript>
+        </section>
+        <footer class="footer"><div><strong>NX ARCHIVE</strong><span class="footer-dash">—</span> 为你的下一段冒险提供方向。</div><p>独立游戏攻略导航站 · 所有攻略跳转至第三方网站，本站不托管其内容。游戏商标归各权利人所有。</p></footer>
+      </main>
+    </div>
+  </div>
+</body>
+</html>

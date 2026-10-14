@@ -1,4 +1,4 @@
-name: Deploy Pages
+name: Deploy Portal
 on:
   push:
     branches: [main]
@@ -12,12 +12,9 @@ concurrency:
   cancel-in-progress: false
 jobs:
   build:
-    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
       - uses: actions/setup-node@v6
         with:
           node-version: 22
@@ -25,8 +22,6 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: npm run build
-        env:
-          VITE_COLLABORATION_URL: ${{ vars.COLLABORATION_URL }}
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
