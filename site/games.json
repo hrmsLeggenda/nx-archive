@@ -1,0 +1,220 @@
+[
+  {
+    "id": "fe-fw",
+    "title": "火焰纹章·万缕千丝",
+    "english": "Fire Emblem: Fortune's Weave",
+    "platform": "Switch 2",
+    "genre": "策略战棋",
+    "summary": "多主角战线、角色养成与职业规划",
+    "source": "中文社区攻略",
+    "url": "https://cn.fire-emblem-fw.site/index.html",
+    "tone": "violet",
+    "symbol": "⚔",
+    "featured": true,
+    "keywords": [
+      "FE",
+      "风花雪月",
+      "战棋"
+    ]
+  },
+  {
+    "id": "zelda-totk",
+    "title": "塞尔达传说 王国之泪",
+    "english": "The Legend of Zelda: Tears of the Kingdom",
+    "platform": "Switch",
+    "genre": "动作冒险",
+    "summary": "海拉鲁探索、神庙与全收集",
+    "source": "Game8 攻略",
+    "url": "https://game8.co/games/Zelda-Tears-of-the-Kingdom",
+    "tone": "teal",
+    "symbol": "✦",
+    "featured": true,
+    "keywords": [
+      "Zelda",
+      "TOTK",
+      "塞尔达"
+    ]
+  },
+  {
+    "id": "mario-kart-world",
+    "title": "马力欧卡丁车 世界",
+    "english": "Mario Kart World",
+    "platform": "Switch 2",
+    "genre": "竞速",
+    "summary": "开放世界、赛道与竞速技巧",
+    "source": "Game8 攻略",
+    "url": "https://game8.co/games/Mario-Kart-World",
+    "tone": "coral",
+    "symbol": "🏁",
+    "featured": true,
+    "keywords": [
+      "马里奥",
+      "赛车",
+      "Mario Kart"
+    ]
+  },
+  {
+    "id": "xenoblade3",
+    "title": "异度神剑 3",
+    "english": "Xenoblade Chronicles 3",
+    "platform": "Switch",
+    "genre": "角色扮演",
+    "summary": "职业搭配、英雄任务与地图",
+    "source": "Game8 攻略",
+    "url": "https://game8.co/games/Xenoblade-Chronicles-3",
+    "tone": "blue",
+    "symbol": "◇",
+    "keywords": [
+      "异度之刃",
+      "XB3",
+      "Xenoblade"
+    ]
+  },
+  {
+    "id": "pokemon-za",
+    "title": "宝可梦传说 Z-A",
+    "english": "Pokémon Legends: Z-A",
+    "platform": "Switch 2",
+    "genre": "角色扮演",
+    "summary": "图鉴、招式与密阿雷市探索",
+    "source": "Serebii 图鉴",
+    "url": "https://www.serebii.net/legendsz-a/",
+    "tone": "pink",
+    "symbol": "◉",
+    "keywords": [
+      "精灵宝可梦",
+      "Pokemon"
+    ]
+  },
+  {
+    "id": "fe-engage",
+    "title": "火焰纹章 Engage",
+    "english": "Fire Emblem Engage",
+    "platform": "Switch",
+    "genre": "策略战棋",
+    "summary": "纹章士、角色培养与章节攻略",
+    "source": "Game8 攻略",
+    "url": "https://game8.co/games/Fire-Emblem-Engage",
+    "tone": "indigo",
+    "symbol": "♜",
+    "keywords": [
+      "FE",
+      "火纹"
+    ]
+  },
+  {
+    "id": "zelda-botw",
+    "title": "塞尔达传说 旷野之息",
+    "english": "The Legend of Zelda: Breath of the Wild",
+    "platform": "Switch",
+    "genre": "动作冒险",
+    "summary": "神庙位置、主线与装备收集",
+    "source": "Game8 攻略",
+    "url": "https://game8.co/games/Zelda-Breath-of-the-Wild",
+    "tone": "green",
+    "symbol": "△",
+    "keywords": [
+      "Zelda",
+      "BOTW",
+      "荒野之息"
+    ]
+  },
+  {
+    "id": "animal-crossing",
+    "title": "集合啦！动物森友会",
+    "english": "Animal Crossing: New Horizons",
+    "platform": "Switch",
+    "genre": "休闲模拟",
+    "summary": "岛屿建设、居民与物品资料",
+    "source": "Nookipedia 百科",
+    "url": "https://nookipedia.com/wiki/Animal_Crossing:_New_Horizons",
+    "tone": "mint",
+    "symbol": "✿",
+    "keywords": [
+      "动森",
+      "Animal Crossing"
+    ]
+  },
+  {
+    "id": "monster-hunter-rise",
+    "title": "怪物猎人 崛起",
+    "english": "Monster Hunter Rise",
+    "platform": "Switch",
+    "genre": "动作冒险",
+    "summary": "狩猎入门、武器与怪物资料",
+    "source": "Game8 攻略",
+    "url": "https://game8.co/games/Monster-Hunter-Rise/archives/315992",
+    "tone": "amber",
+    "symbol": "⚡",
+    "keywords": [
+      "曙光",
+      "MHR",
+      "MH Rise"
+    ]
+  },
+  {
+    "id": "splatoon3",
+    "title": "斯普拉遁 3",
+    "english": "Splatoon 3",
+    "platform": "Switch",
+    "genre": "多人对战",
+    "summary": "武器、对战规则与祭典资料",
+    "source": "Inkipedia 百科",
+    "url": "https://splatoonwiki.org/wiki/Splatoon_3",
+    "tone": "lime",
+    "symbol": "✳",
+    "keywords": [
+      "喷射战士",
+      "Splatoon",
+      "乌贼"
+    ]
+  },
+  {
+    "id": "pokemon-sv",
+    "title": "宝可梦 朱／紫",
+    "english": "Pokémon Scarlet & Violet",
+    "platform": "Switch",
+    "genre": "角色扮演",
+    "summary": "图鉴、宝可梦分布与育成",
+    "source": "Serebii 图鉴",
+    "url": "https://www.serebii.net/scarletviolet/",
+    "tone": "plum",
+    "symbol": "✧",
+    "keywords": [
+      "Pokemon",
+      "朱紫"
+    ]
+  },
+  {
+    "id": "mario-odyssey",
+    "title": "超级马力欧 奥德赛",
+    "english": "Super Mario Odyssey",
+    "platform": "Switch",
+    "genre": "动作冒险",
+    "summary": "王国地点、力量之月与收集百科",
+    "source": "Super Mario Wiki",
+    "url": "https://www.mariowiki.com/Super_Mario_Odyssey",
+    "tone": "orange",
+    "symbol": "★",
+    "keywords": [
+      "马里奥",
+      "Mario"
+    ]
+  },
+  {
+    "id": "smash-ultimate",
+    "title": "任天堂明星大乱斗 特别版",
+    "english": "Super Smash Bros. Ultimate",
+    "platform": "Switch",
+    "genre": "多人对战",
+    "summary": "斗士数据、机制与对战资料",
+    "source": "SmashWiki 百科",
+    "url": "https://www.ssbwiki.com/Super_Smash_Bros._Ultimate",
+    "tone": "navy",
+    "symbol": "✕",
+    "keywords": [
+      "大乱斗",
+      "Smash Bros"
+    ]
+  }
+]

@@ -1,98 +1,39 @@
-# NX Archive
+# NX Archive · 游戏攻略导航
 
-Switch / Switch 2 中文攻略 Wiki，使用 VitePress 1.6.4（MIT）和 Vue。源码、来源锁定和内容均在仓库持久化；测试、构建和部署通过 GitHub Actions。
+NX Archive 现为**纯静态游戏攻略导航门户**，桌面端优先，展示 Nintendo Switch / Switch 2 游戏，并将访客直接引导到外部游戏攻略或 Wiki。本站不托管游戏条目、不提供账号/编辑器/用户内容存储，也不宣称外部网站属于 NX Archive。
 
-## 游戏 Wiki
+## 运行
 
-游戏目录 → 独立游戏 Wiki → 攻略、客制化分类、数据库、互动地图。导航维护于 `docs/data/wikis.json`。游戏全文检索与全站检索均可使用。
+需要 Node.js 22+，不需要 npm 第三方依赖。
 
-《火焰纹章·万缕千丝》新增固定 SQLite 快照导入、62 人物与58职业成长表、技能与法术条件检索、成长期望模拟器、阶段资源查询、章节时间轴和阶段地图索引。
-
-首批资源54条（4地牢、2阶段），时间轴13条；不是全地图或逐章完整数据库。坐标尚未取得，不将索引布局标作实际地图。
-
-## 云端验证与部署
-
-PR 与 `work/**` 分支自动验证。Actions 使用 Node 22、Python 3，运行 `npm ci`、`npm test`、`npm run build`；CI 额外用 Chromium 验证筛选、阶段资源、地图进度隔离及移动端页面。预览产物与页面截图保存在 Actions artifacts。
-
-合并 main 后，既有 GitHub Pages 工作流发布到 https://hrmsLeggenda.github.io/nx-archive/ 。Pages Source 设为 GitHub Actions，无部署密钥。
-
-## 数据导入
-
-`scripts/import-fwe.py` 下载 `sources/fire-emblem-fw/upstream.json` 指定提交的 SQLite，验证 Git blob 校验值；仅导出数值和短条件，不导出抓取正文、图片或全文索引。构建时生成数据库 JSON 和供检索的 Markdown 总表，不提交产物。上游未检测到仓库许可证，来源锁定不代表转载许可。
-
-`sources/fire-emblem-fw/crosscheck.json` 为4主角和Mu的Serenes Forest核对记录；差异在页面显示。缺失成长率保留null，不取默认零值。
-
-资源与时间轴在游戏子 Wiki 的 `data/resources.json` 和 `data/timeline.json`；固定、随机池、条件事件分开存储，来源、核对日期、未知刷新和坐标均保留。新增数据需核对事实和来源。
-
-## 可重建命令
-
-```sh
+```bash
 npm ci
 npm test
 npm run build
-npm run preview
+npm run dev
 ```
 
-构建需要下载固定上游快照。Node22+、Python3。产物为 `docs/.vitepress/dist`。直接开发前先运行 `npm run data:import`。
+浏览器打开本地服务提示的 URL（默认 http://localhost:4173/）。构建产物位于 `docs/.vitepress/dist`，保留这一历史路径是为了兼容已经配置好的 Cloudflare Pages 构建输出目录和 GitHub Pages 工作流。
 
-本站非 Nintendo 官方网站。无账户、评论或跨设备进度同步；进度保存在浏览器，内容通过 PR 维护。
+## 目录与维护
 
-## Wiki 门户与分类
+- `site/index.html`：门户页面语义骨架。
+- `site/styles.css`：桌面布局、推荐卡片与游戏图标卡片。
+- `site/app.js`：搜索、分类、平台筛选与本地收藏。
+- `site/games.json`：唯一游戏来源；新增游戏时填写 id/title/genre/platform/url 等字段。
+- `scripts/build-site.mjs`：将静态站复制到发布目录。
+- `scripts/serve-site.mjs`：本地预览服务器。
+- `tests/portal.test.mjs`：校验所有入口为 HTTPS、ID 唯一、字段完整。
 
-游戏 Wiki 使用独立导航、分类目录与全部页面。页面分类优先读取 frontmatter 的 categories 数组（分类ID），兼容旧栏目路径；同一页面可属于多个分类。栏目配置提供分类名称、父分类和入口，成员由内容索引自动生成。近期更新读取完整Git历史中的页面提交时间，不伪造浏览量或更新时间。
+## 外部攻略
 
-第一批提供门户与布局、分类筛选、按游戏分组搜索、编辑和历史链接；页面创建向导和站内写入属于后续批次。
+页面的“进入攻略”将打开新的浏览器标签。入口分别来自外部社区 Wiki / 攻略站，数据文件包含来源站名。不要把未部署的 Akashic 或已移除的旧站内 Wiki 当作有效链接。如果后续 Akashic 正式上线，只需更新 `site/games.json` 中《火焰纹章·万缕千丝》的 `url` 和 `source`。
 
-## 独立条目与关联关系
+封面为本站原创的抽象装饰/字符配色，不转载第三方游戏美术。游戏名称与商标属于各权利人。
 
-第二批构建生成62人物、58职业、4地点、13任务节点及已录入资源物品的独立条目。人物／职业以来源页面编号标识，地点与任务保留既有ID，物品按原名生成固定ID；别名只做检索，不复制页面。未核实的不同语言物品名称不自动合并。
+## 部署
 
-条目内容来自固定快照或仓库内已核对记录，未添加无来源的推荐与数值。人物页含成长、擅长、法术及路线节点；职业页分列成长和属性加值；地点页按阶段分列资源；物品页反向列出获取地点。地图深链接按location筛选已知地点。
+PR 运行 CI（`npm ci && npm test && npm run build`）；main 自动部署至 GitHub Pages：
+https://hrmsLeggenda.github.io/nx-archive/
 
-生成条目的源码为构建器和结构化数据，页面不提供无效的直接编辑链接。后续编辑器及勘误覆盖层另行实现；人工补充应保留在独立来源文件中，勿改生成目录。
-
-## 第三批：创建与编辑
-
-每个游戏 Wiki 有 edit 页面与导航入口。WikiEditor 提供四种模板、结构化字段、完整 Markdown、常用 Markdown 安全预览、线性差异、摘要与校验。本地草稿按游戏与目标分开保存；支持显式恢复、旧基线提醒、下载与导入，存储失败可导出保留。
-
-编辑源码索引在构建时生成，保存 Git blob SHA。用户点击冲突检查时只读 GitHub Contents API，以主线文件 SHA 检查旧版本/重复路径；网络或限额失败明确提示，交给 GitHub 核对。不保存凭据、不在静态站点登录或写仓库。前往 GitHub 提交需复制全文、粘贴文件、建立分支与 PR；Actions 与主线 Pages 工作流保持一致。
-
-自动生成条目的补充以 notes/<entityId>.md 独立持久化，原条目在构建时添加回链；数值勘误仍需更新来源数据。历史恢复与重命名在 GitHub 完成。新增维护操作页并修改来源说明作为创建/编辑的实际发布验收。
-
-CI 增加编辑模型测试与浏览器验收：新建、已有编辑、字段同步、预览与安全性、草稿隔离及恢复、重复路径、主线冲突、API失败、存储失败、条目补充和移动端布局。
-
-## 第四批：结构化勘误覆盖层
-
-导入器输出 baseline-database.json；已核对的 resources.json / timeline.json 作为对应基线。持久化人工修正在 docs/games/fire-emblem-fw/data/overrides/<dataset>/<recordId>.json。构建合成有效数据，数据库、成长模拟器、资源、时间轴、总表和独立条目统一使用合成结果。
-
-每份修正保存字段、当时原值、人工值、来源、核对日期、版本和原因。基线值变化且不同于人工值时标记 needs-review，仍保留人工修正；基线已等于修正值则标记 matches-upstream。记录消失、非法字段、范围、重复修正和阶段路线冲突会阻止构建，不删除人工文件。清空 changes 恢复当前基线，历史仍由 Git 保存。
-
-站内 data-editor 提供字段编辑、差异、来源与状态、草稿、导入导出和只读主线冲突检查。JSON 经 GitHub 分支/PR 交接。身份、原名与关联键不可改；真实地图坐标仍待核对。上游已发布中文名称移到覆盖文件，不新增未经核实的成长数值。
-
-验收使用明确标注的测试夹具模拟上游更新、缺失/零值、字段失效和关系变化，验证修正保留与来源文件不被修改；不为验收修改真实游戏数值。
-
-## 第五批：站内协作服务（待管理员配置启用）
-
-新增 Cloudflare Worker GitHub App 用户授权登录、仓库写权限校验、一小时服务端会话、编辑器直接创建分支与 PR、主线 SHA 冲突检查、PR 审阅及 Actions 状态。GitHub access token 仅存在服务端 KV；浏览器只保存短期不透明会话。前端未配置服务地址时明确提示尚未启用，并保留原有 GitHub 提交流程。支持按账户与路径隔离的云端草稿（Durable Object 版本比较）、历史版本载入为新修改和冲突合并；不自动合并 PR。
-
-服务端托管扩展到 Cloudflare Workers；部署仍由 Actions 执行，网站仍用 Pages。配置见 services/collaboration/README.md。第五批上线验收必须补做真实账户登录、提交、权限撤销和并发修改检查，不能用接口模拟代替。
-
-## 文档编辑与自动发布
-
-编辑器新增文档视图，支持标题、格式、列表、链接和表格，页面元数据保持独立。包含 Vue/HTML/特殊区块的页面继续使用 Markdown，避免格式转换丢失。
-
-启用协作服务后，“保存并发布”自动创建后台分支，CI 通过后自动合并并触发 Pages；用户不用操作 GitHub。失败和冲突不会强制发布。正式功能仍依赖 GitHub App 和 Cloudflare 的首次配置。
-
-## 空间与文档工作区
-
-首页列出空间并提供创建入口；workspace 页面用空间、分类、页面参数定位。空间分类菜单支持添加、重命名、排序和移除（含文档分类不可直接移除）。现有人工攻略载入同一文档编辑区，新页面自动生成文件名与元数据；无需输入仓库路径。已有数据工具与自动生成条目继续保留原入口。
-
-空间配置保存在 docs/games/<space>/space.json，文档仍为对应空间内 Markdown。前端在线保存经协作服务及 CI 自动发布；没有服务配置时仅保存本地草稿并明确提示，不宣称公开网站已更新。此版本不包含匿名编辑或实时协作。
-
-## 文档内嵌图片
-
-保存时将 Base64 PNG/JPEG/GIF/WebP 图片提取为游戏内附件，文档使用 /nx-archive/wiki-assets/<space>/ 地址；附件和正文在同一工作分支发布。保存请求上限8MB、单张图片5MB、每次最多10张，正文提取后仍限制200000字符。超限响应保留跨域头，浏览器可展示明确原因。图片属于提交者内容，不自动抓取第三方素材，不使用上传的排障 HAR 作为测试文件。
-
-## 桌面 Wiki 界面
-
-空间工作区采用独立56px顶部栏、248px分类与页面树和自适应正文画布；侧栏可折叠。阅读页使用 TOAST UI Viewer，编辑使用同套件 WYSIWYG Editor，提供中文工具栏、图片、表格、Markdown 源码切换与固定保存栏。正文标题自动生成右侧目录，图片按正文宽度显示，长表格与代码独立滚动。既有资料页也取消固定正文宽度；空间保存、草稿、冲突检查和自动发布沿用协作服务。
+Cloudflare Pages：构建命令 `npm run build`，输出目录 `docs/.vitepress/dist`。页面使用相对资源路径，因此既可发布到 GitHub Pages 的 `/nx-archive/`，也可发布到 Cloudflare 的根路径。旧 Wiki 服务与自动发布工作流从当前树移除；历史代码仍保留在 Git 提交中。
